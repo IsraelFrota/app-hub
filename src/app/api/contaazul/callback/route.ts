@@ -1,17 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const CLIENT_ID = process.env.CONTAAZUL_CLIENT_ID!;
-const CLIENT_SECRET = process.env.CONTAAZUL_CLIENT_SECRET!;
-const REDIRECT_URI = process.env.CONTAAZUL_REDIRECT_URI!;
+const CLIENT_ID = process.env.CONTAAZUL_CLIENT_ID;
+const CLIENT_SECRET = process.env.CONTAAZUL_CLIENT_SECRET;
+const REDIRECT_URI = process.env.CONTAAZUL_REDIRECT_URI;
 
 export async function GET(request: NextRequest) {
+  if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
+    return NextResponse.json({ error: 'Variáveis de ambiente não configuradas.' }, { status: 500 });
+  }
+
   const code = request.nextUrl.searchParams.get('code');
 
-	if (!code) {
+  if (!code) {
     return NextResponse.json({ error: 'Código de autorização não fornecido' }, { status: 400 });
   }
 
-	const params = new URLSearchParams();
+  const params = new URLSearchParams();
   params.append('grant_type', 'authorization_code');
   params.append('code', code);
   params.append('redirect_uri', REDIRECT_URI);
@@ -33,9 +37,8 @@ export async function GET(request: NextRequest) {
     }
 
     const tokenData = await tokenResponse.json();
-
     return NextResponse.json({ token: tokenData });
   } catch (error) {
-    return NextResponse.json({ error: 'Erro inesperado', details: error }, { status: 500 });
+    return NextResponse.json({ error: 'Erro inesperado', details: String(error) }, { status: 500 });
   }
 }
