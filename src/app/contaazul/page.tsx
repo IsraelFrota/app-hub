@@ -1,3 +1,5 @@
+'use client';
+
 export default function ContaAzul() {
 	async function handleToken() {
 		const response = await fetch('/api/contaazul/callback');

@@ -9,7 +9,7 @@ export default function Home() {
     { title: 'Service', icon: '📊', url: 'http://192.168.0.18:8284/' },
     { title: 'Certificate', icon: '🪪', url: 'http://192.168.0.99:3000/' },
     { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/' },
-    { title: 'Conta Azul', icon: '', url: '/conta-azul/'}
+    { title: 'Conta Azul', icon: '🔗', url: '/contaazul'}
   ];
 
   const [search, setSearch] = useState('');
