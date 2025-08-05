@@ -10,9 +10,15 @@ export async function GET(request: NextRequest) {
   }
 
   const code = request.nextUrl.searchParams.get('code');
+  const state = request.nextUrl.searchParams.get('state');
+  const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
   if (!code) {
     return NextResponse.json({ error: 'Código de autorização não fornecido' }, { status: 400 });
+  }
+
+  if (!state) {
+    return NextResponse.json({ error: 'String de segurança não fornecido' }, { status: 400 });
   }
 
   const params = new URLSearchParams();
@@ -27,6 +33,7 @@ export async function GET(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${basicAuth}`,
       },
       body: params.toString(),
     });
