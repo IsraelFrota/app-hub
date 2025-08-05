@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI;
+const CLIENT_ID = '1o8pf0gbo7hjjfchkacn4s0kfk';
+const CLIENT_SECRET = '1ot7ju7cvo8m4koialbegkqit2grk0eddnjdjbocnfi6upli4o3q';
+const REDIRECT_URI = 'https://app-hub-puce.vercel.app/api/contaazul/callback';
 
 export async function GET(request: NextRequest) {
   if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
