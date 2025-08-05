@@ -2,9 +2,9 @@
 
 export default function ContaAzul() {
 	function handleRedirectToContaAzul() {
-		const clientId = '1o8pf0gbo7hjjfchkacn4s0kfk';
-		const redirectUri = 'https://app-hub-puce.vercel.app/api/contaazul/callback';
-		const state = 'IsraelFrotaBpoFinanceiro937638104702';
+		const clientId = process.env.NEXT_PUBLIC_CONTAAZUL_CLIENT_ID!;
+		const redirectUri = process.env.NEXT_PUBLIC_CONTAAZUL_REDIRECT_URI!;
+		const state = process.env.NEXT_PUBLIC_CONTAAZUL_STATE!;
 
 		const authUrl = `https://auth.contaazul.com/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&scope=openid+profile+aws.cognito.signin.user.admin`
 		
