@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   params.append('client_secret', CLIENT_SECRET);
 
   try {
-    const tokenResponse = await fetch('https://api.contaazul.com/oauth2/token', {
+    const tokenResponse = await fetch('https://auth.contaazul.com/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
