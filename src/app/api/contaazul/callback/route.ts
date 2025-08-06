@@ -1,3 +1,5 @@
+import { connectToDatabase } from '@/lib/mongoose';
+import Token from '@/model/model';
 import { NextRequest, NextResponse } from 'next/server';
 
 const CLIENT_ID = process.env.CLIENT_ID!;
@@ -5,10 +7,8 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET!;
 const REDIRECT_URI = process.env.REDIRECT_URI!;
 
 export async function GET(request: NextRequest) {
-  if (!CLIENT_ID || !CLIENT_SECRET || !REDIRECT_URI) {
-    return NextResponse.json({ error: 'Variáveis de ambiente não configuradas.' }, { status: 500 });
-  }
-
+  await connectToDatabase();
+  
   const code = request.nextUrl.searchParams.get('code');
   const state = request.nextUrl.searchParams.get('state');
   const basicAuth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
@@ -44,6 +44,19 @@ export async function GET(request: NextRequest) {
     }
 
     const tokenData = await tokenResponse.json();
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + tokenData.expires_in * 1000);
+    const tokenDoc = {
+      id_token: tokenData.id_token,
+      access_token: tokenData.access_token,
+      refresh_token: tokenData.refresh_token,
+      expires_at: expiresAt,
+      token_type: tokenData.token_type,
+      created_at: now,
+      updated_at: now,
+    };
+    await Token.create(tokenDoc);
+
     return NextResponse.json({ token: tokenData });
   } catch (error) {
     return NextResponse.json({ error: 'Erro inesperado', details: String(error) }, { status: 500 });
