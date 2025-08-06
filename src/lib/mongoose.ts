@@ -1,12 +1,21 @@
 import mongoose from 'mongoose';
 
+interface MongooseCache {
+  conn: typeof import('mongoose') | null;
+  promise: Promise<typeof import('mongoose')> | null;
+}
+
+declare global {
+  var mongoose: MongooseCache | undefined;
+}
+
 const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
   throw new Error('MONGODB_URI não definida nas variáveis de ambiente');
 }
 
-let cached = (global as any).mongoose || { conn: null, promise: null };
+const cached: MongooseCache = global.mongoose || { conn: null, promise: null };
 
 export async function connectToDatabase() {
   if (cached.conn) return cached.conn;
@@ -18,6 +27,6 @@ export async function connectToDatabase() {
   }
 
   cached.conn = await cached.promise;
-  (global as any).mongoose = cached;
+  global.mongoose = cached;
   return cached.conn;
 }
