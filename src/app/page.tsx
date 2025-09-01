@@ -9,7 +9,8 @@ export default function Home() {
     { title: 'Service', icon: '📊', url: 'http://192.168.0.18:8284/' },
     { title: 'Certificate', icon: '🪪', url: 'http://192.168.0.99:3000/' },
     { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/' },
-    { title: 'Conta Azul', icon: '🔗', url: '/contaazul'}
+    { title: 'Conta Azul', icon: '🔗', url: '/contaazul' },
+    { title: 'Hype Pro Financeiro', icon: '📈', url: 'https://hype-pro-financeiro.vercel.app' }
   ];
 
   const [search, setSearch] = useState('');
