@@ -8,9 +8,9 @@ export default function Home() {
   const apps: ItemProps[] = [
     { title: 'App 5s', icon: '📋', url: 'http://192.168.0.18:3001/' },
     { title: 'Dashboard 5s', icon: '📊', url: 'http://192.168.0.18:3001/ui/dashboard' },
-    { title: 'Certificate', icon: '🪪', url: 'http://192.168.0.99:3000/' },
+    // { title: 'Certificate', icon: '🪪', url: 'http://192.168.0.99:3000/' },
     { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/' },
-    { title: 'Service evaluation', icon: '🌟', url: 'http://192.168.0.18:8284/' },
+    // { title: 'Service evaluation', icon: '🌟', url: 'http://192.168.0.18:8284/' },
     // { title: 'Conta Azul', icon: '🔗', url: '/contaazul' },
     // { title: 'Hype Pro Financeiro', icon: '📈', url: 'https://hype-pro-financeiro.vercel.app' },
     // { title: 'FocusBoard', icon: '🎯', url: 'http://192.168.0.18:3000/' },
