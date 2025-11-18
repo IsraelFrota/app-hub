@@ -2,12 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-
-interface ItemProps {
-  title: string;
-  icon: string;
-  url: string;
-}
+import { ItemProps } from '../../types/Item';
 
 export function ItemComponent({ title, icon, url }: ItemProps) {
   const isExternal = url.startsWith('http');
@@ -17,7 +12,7 @@ export function ItemComponent({ title, icon, url }: ItemProps) {
       initial={{ opacity: 0, scale: 0.9, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition w-[80px] h-[80px] text-center"
+      className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-md hover:shadow-lg transition w-[110px] h-[90px] text-center"
     >
       <div className="text-2xl">{icon}</div>
       <p className="text-[0.75rem] mt-1 text-gray-800">{title}</p>

@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { IdCard } from "lucide-react";
 import { ItemComponent } from './_components/ItemComponent';
+import { ItemProps } from '@/types/Item';
 
 export default function Home() {
-  const apps = [
+  const apps: ItemProps[] = [
     { title: 'App 5s', icon: '📋', url: 'http://192.168.0.18:3001/' },
     { title: 'Dashboard 5s', icon: '📊', url: 'http://192.168.0.18:3001/ui/dashboard' },
     { title: 'Certificate', icon: '🪪', url: 'http://192.168.0.99:3000/' },
     { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/' },
-    { title: 'Service', icon: '📊', url: 'http://192.168.0.18:8284/' },
+    { title: 'Service evaluation', icon: '🌟', url: 'http://192.168.0.18:8284/' },
     // { title: 'Conta Azul', icon: '🔗', url: '/contaazul' },
     // { title: 'Hype Pro Financeiro', icon: '📈', url: 'https://hype-pro-financeiro.vercel.app' },
     { title: 'FocusBoard', icon: '🎯', url: 'http://192.168.0.18:3000/' },
@@ -26,7 +28,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
+      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg">
         <h1 className="text-2xl font-bold text-gray-800 mb-1">AppHub</h1>
         <p className="text-gray-600 mb-4 text-sm">Applications</p>
         <input
