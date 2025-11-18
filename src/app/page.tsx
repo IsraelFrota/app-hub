@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { ItemComponent } from './_components/ItemComponent';
 import { ItemProps } from '@/types/Item';
 
 export default function Home() {
