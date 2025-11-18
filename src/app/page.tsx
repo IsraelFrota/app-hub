@@ -6,12 +6,16 @@ import { ItemComponent } from './_components/ItemComponent';
 export default function Home() {
   const apps = [
     { title: 'App 5s', icon: '📋', url: 'http://192.168.0.18:3001/' },
-    { title: 'Service', icon: '📊', url: 'http://192.168.0.18:8284/' },
+    { title: 'Dashboard 5s', icon: '📊', url: 'http://192.168.0.18:3001/ui/dashboard' },
     { title: 'Certificate', icon: '🪪', url: 'http://192.168.0.99:3000/' },
     { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/' },
-    { title: 'Conta Azul', icon: '🔗', url: '/contaazul' },
-    { title: 'Hype Pro Financeiro', icon: '📈', url: 'https://hype-pro-financeiro.vercel.app' },
-    { title: 'FocusBoard', icon: '🎯', url: 'http://192.168.0.18:3000/' }
+    { title: 'Service', icon: '📊', url: 'http://192.168.0.18:8284/' },
+    // { title: 'Conta Azul', icon: '🔗', url: '/contaazul' },
+    // { title: 'Hype Pro Financeiro', icon: '📈', url: 'https://hype-pro-financeiro.vercel.app' },
+    { title: 'FocusBoard', icon: '🎯', url: 'http://192.168.0.18:3000/' },
+    { title: 'File server', icon: '🗄️', url: 'http://192.168.0.99:8081/' },
+    { title: 'Book catalog', icon: '📚', url: 'https://docs.google.com/spreadsheets/d/1Qd5tLyTvan9-EJuW2g_UYQaV7HRADrMuA402mDRNo2o/edit?gid=921363456#gid=921363456' },
+    { title: 'Snack times', icon: '🍔', url: 'https://docs.google.com/spreadsheets/d/1Ti7rzzUv6jqkb_9ih_zK3D9nyJwS8kPiTagHesTGHq4/edit?gid=0#gid=0' },   
   ];
 
   const [search, setSearch] = useState('');
