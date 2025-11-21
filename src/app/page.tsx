@@ -11,6 +11,7 @@ export default function Home() {
     { title: 'File server', icon: '🗄️', url: 'http://192.168.0.99:8081/', description: 'Local server for managing and accessing shared files.' },
     { title: 'Book catalog', icon: '📚', url: 'https://docs.google.com/spreadsheets/d/1Qd5tLyTvan9-EJuW2g_UYQaV7HRADrMuA402mDRNo2o/edit?gid=921363456#gid=921363456', description: 'Google spreadsheet with the available book catalog.' },
     { title: 'Snack times', icon: '🍔', url: 'https://docs.google.com/spreadsheets/d/1Ti7rzzUv6jqkb_9ih_zK3D9nyJwS8kPiTagHesTGHq4/edit?gid=0#gid=0', description: 'Google spreadsheet containing the snack schedule.' },
+    { title: 'Audit criteria', icon: '📖', url: 'https://docs.google.com/spreadsheets/d/10YdvT6qfqdJuHmHZp_KXCZ_8DV_h6C1bkgpsDwVKqsY/edit?usp=sharing' }
   ];
 
   const [search, setSearch] = useState('');
