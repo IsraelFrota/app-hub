@@ -1,5 +1,5 @@
 import { connectToDatabase } from '@/lib/mongoose';
-import Token from '@/model/model';
+import { Token } from '@/model/model';
 import { NextRequest, NextResponse } from 'next/server';
 
 const CLIENT_ID = process.env.CLIENT_ID!;
