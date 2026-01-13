@@ -30,16 +30,16 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const apps: ItemProps[] = [
-    { title: 'App 5s', icon: '📋', url: 'http://192.168.0.18:3001/', description: 'System for performing 5S methodology audits.'},
-    { title: 'Audit criteria', icon: '📖', url: 'https://docs.google.com/spreadsheets/d/10YdvT6qfqdJuHmHZp_KXCZ_8DV_h6C1bkgpsDwVKqsY/edit?usp=sharing', description: 'Spreadsheet with evaluation criteria for the 5S audit.' },
-    { title: 'Book catalog', icon: '📚', url: 'https://docs.google.com/spreadsheets/d/1Qd5tLyTvan9-EJuW2g_UYQaV7HRADrMuA402mDRNo2o/edit?gid=921363456#gid=921363456', description: 'Google spreadsheet with the available book catalog.' },
-    { title: 'Dashboard 5s', icon: '📊', url: 'http://192.168.0.18:3001/ui/dashboard', description: 'Dashboard for visualizing 5S audit results.' },
-    { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/', description: 'Local music player for on-site streaming.' },
-    { title: 'IF Time Control', icon: '🕰️', url: 'http://192.168.0.18:3008/', description: 'Digital attendance system for interns.' },
-    { title: 'File server', icon: '🗄️', url: 'http://192.168.0.99:8081/', description: 'Local server for managing and accessing shared files.' },
-    { title: 'Office Track', icon: '🗂️', url: 'http://192.168.0.18:3010/', description: 'A system for collaboration and organization of company activities in the human resources department.' },
-    { title: 'Snack times', icon: '🍔', url: 'https://docs.google.com/spreadsheets/d/1Ti7rzzUv6jqkb_9ih_zK3D9nyJwS8kPiTagHesTGHq4/edit?gid=0#gid=0', description: 'Google spreadsheet containing the snack schedule.' },
-    { title: 'Feedbacks', icon: '📃', url: '/feedback', description: 'Página com os feedbacks e sugestões do colaboradores' },
+    { title: 'App 5S', icon: '📋', url: 'http://192.168.0.18:3001/', description: 'Sistema para realização de auditorias da metodologia 5S.' },
+    { title: 'Critérios de Auditoria', icon: '📖', url: 'https://docs.google.com/spreadsheets/d/10YdvT6qfqdJuHmHZp_KXCZ_8DV_h6C1bkgpsDwVKqsY/edit?usp=sharing', description: 'Planilha com os critérios de avaliação para a auditoria 5S.' },
+    { title: 'Catálogo de Livros', icon: '📚', url: 'https://docs.google.com/spreadsheets/d/1Qd5tLyTvan9-EJuW2g_UYQaV7HRADrMuA402mDRNo2o/edit?gid=921363456#gid=921363456', description: 'Planilha do Google com o catálogo de livros disponíveis.' },
+    { title: 'Dashboard 5S', icon: '📊', url: 'http://192.168.0.18:3001/ui/dashboard', description: 'Painel para visualização dos resultados das auditorias 5S.' },
+    { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/', description: 'Player de música local para streaming interno.' },
+    { title: 'IF Controle de Ponto', icon: '🕰️', url: 'http://192.168.0.18:3008/', description: 'Sistema digital de controle de ponto para estagiários.' },
+    { title: 'Servidor de Arquivos', icon: '🗄️', url: 'http://192.168.0.99:8081/', description: 'Servidor local para gerenciamento e acesso a arquivos compartilhados.' },
+    { title: 'Office Track', icon: '🗂️', url: 'http://192.168.0.18:3010/', description: 'Sistema para colaboração e organização das atividades da empresa no setor de recursos humanos.' },
+    { title: 'Horário do Lanche', icon: '🍔', url: 'https://docs.google.com/spreadsheets/d/1Ti7rzzUv6jqkb_9ih_zK3D9nyJwS8kPiTagHesTGHq4/edit?gid=0#gid=0', description: 'Planilha do Google contendo o cronograma de lanches.' },
+    { title: 'Feedbacks', icon: '📃', url: '/feedback', description: 'Página com os feedbacks e sugestões dos colaboradores.' },
   ];
 
   const [search, setSearch] = useState('');
@@ -97,7 +97,7 @@ export default function Home() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-semibold text-white mb-1">AppHub</h1>
-            <p className="text-gray-200 mb-4 text-sm">Applications</p>
+            <p className="text-gray-200 mb-4 text-sm">Aplicativos</p>
           </div>
           
           <MessageCircleMore 
@@ -121,7 +121,7 @@ export default function Home() {
 
         <input
           type="text"
-          placeholder="Search"
+          placeholder="Buscar"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className="w-full p-2 mb-6 mt-5 rounded-xl bg-white/10 border border-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
