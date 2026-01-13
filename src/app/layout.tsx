@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://app-hub-puce.vercel.app/"),
@@ -33,6 +34,8 @@ export default function RootLayout({
         className="antialiased"
       >
         {children}
+
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );
