@@ -24,3 +24,18 @@ export async function POST(request: NextRequest) {
 	await Suggestion.create(feedbackData);
 	return NextResponse.json({ message: "Feedback criado com sucesso." }, { status: 201 });
 } 
+
+export async function GET() {
+  try {
+    await connectToDatabaseV2();
+    const response = await Suggestion.find().lean();
+
+    return NextResponse.json({ data: response }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Erro ao buscar sugestões." },
+      { status: 500 }
+    );
+  }
+}
