@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 
 type FeedbackData = {
-	id: string;
+	_id: string;
 	date: string;
 	name: string;
 	suggestion: string;
@@ -92,7 +92,7 @@ export default function FeedbackPage() {
             <TableBody>
               {feedbacks.map((feedback) => (
                 <TableRow
-                  key={feedback.id}
+                  key={feedback._id}
                   className="hover:bg-muted/50 transition-colors"
                 >
                   <TableCell className="text-sm text-muted-foreground">
