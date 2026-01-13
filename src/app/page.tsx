@@ -1,9 +1,34 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { MessageCircleMore } from 'lucide-react';
+
+import {
+  Dialog,
+  DialogTitle,
+  DialogHeader,
+  DialogContent,
+} from '@/components/ui/dialog';
+import { toast } from "sonner";
+import { Separator } from '@/components/ui/separator';
+
+import { FeedbackForm } from './_components/FeedbackForm';
+
+import {
+  FeedbackType,
+  feedbackSchema,
+} from "@/schema/feedbackSchema";
+
 import { ItemProps } from '@/types/Item';
 
 export default function Home() {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const apps: ItemProps[] = [
     { title: 'App 5s', icon: '📋', url: 'http://192.168.0.18:3001/', description: 'System for performing 5S methodology audits.'},
     { title: 'Audit criteria', icon: '📖', url: 'https://docs.google.com/spreadsheets/d/10YdvT6qfqdJuHmHZp_KXCZ_8DV_h6C1bkgpsDwVKqsY/edit?usp=sharing', description: 'Spreadsheet with evaluation criteria for the 5S audit.' },
@@ -22,20 +47,76 @@ export default function Home() {
     app.title.toLowerCase().includes(search.toLowerCase())
   );
 
+  const feedbackForm = useForm<FeedbackType>({
+    resolver: zodResolver(feedbackSchema),
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      suggestion: ""
+    }
+  });
+
+  async function onSubmit(values: FeedbackType) {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/mongo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        toast.error("Error ao registrar seu feedback");
+        return;
+      }
+
+      toast.success("Feedback registrado com sucesso!");
+      setOpenDialog(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fba91f] to-[#202020] flex items-center justify-center p-6">
 
       <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 w-full max-w-2xl">
-      
-        <h1 className="text-2xl font-semibold text-white mb-1">AppHub</h1>
-        <p className="text-gray-200 mb-4 text-sm">Applications</p>
+
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-semibold text-white mb-1">AppHub</h1>
+            <p className="text-gray-200 mb-4 text-sm">Applications</p>
+          </div>
+          
+          <MessageCircleMore 
+            size={24}
+            className="text-white hover:cursor-pointer hover:text-[#202020]"
+            onClick={() => setOpenDialog(true)}
+          />
+        </div>
+
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Feedback de melhoria</DialogTitle>
+            </DialogHeader>
+            <Separator />
+            <FeedbackForm feedbackForm={feedbackForm} onSubmit={onSubmit} loading={loading} />
+          </DialogContent>
+        </Dialog>
+
+        <Separator />
 
         <input
           type="text"
           placeholder="Search"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full p-2 mb-6 rounded-xl bg-white/10 border border-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
+          className="w-full p-2 mb-6 mt-5 rounded-xl bg-white/10 border border-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
         />
 
         <div className="grid grid-cols-2 gap-4">
