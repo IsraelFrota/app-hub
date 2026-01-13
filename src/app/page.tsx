@@ -39,6 +39,7 @@ export default function Home() {
     { title: 'File server', icon: '🗄️', url: 'http://192.168.0.99:8081/', description: 'Local server for managing and accessing shared files.' },
     { title: 'Office Track', icon: '🗂️', url: 'http://192.168.0.18:3010/', description: 'A system for collaboration and organization of company activities in the human resources department.' },
     { title: 'Snack times', icon: '🍔', url: 'https://docs.google.com/spreadsheets/d/1Ti7rzzUv6jqkb_9ih_zK3D9nyJwS8kPiTagHesTGHq4/edit?gid=0#gid=0', description: 'Google spreadsheet containing the snack schedule.' },
+    { title: 'Feedbacks', icon: '📃', url: '/feedback', description: 'Página com os feedbacks e sugestões do colaboradores' },
   ];
 
   const [search, setSearch] = useState('');
@@ -52,7 +53,9 @@ export default function Home() {
     mode: "onChange",
     defaultValues: {
       name: "",
-      suggestion: ""
+      suggestion: "",
+      type: "suggestion",
+      date: `${new Date()}`,
     }
   });
 
@@ -64,7 +67,12 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          name: values.name,
+          suggestion: values.suggestion,
+          date: values.date,
+          type: values.type,
+        }),
       });
 
       if (!response.ok) {
