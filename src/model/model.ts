@@ -10,5 +10,12 @@ const tokenSchema = new Schema({
   "updated_at": Date
 });
 
+const suggestionSchema = new Schema({
+  "name": String,
+  "suggestion": String,
+});
+
+const Suggestion = models.Suggestion || model('Suggestion', suggestionSchema);
 const Token = models.Token || model('Token', tokenSchema);
-export default Token;
+
+export { Token, Suggestion };
