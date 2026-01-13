@@ -10,6 +10,17 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+
+} from "@/components/ui/select"
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,17 +42,43 @@ export function FeedbackForm({ feedbackForm, onSubmit, loading }: FeedbackFormPr
 					className="space-y-3"
 					onSubmit={feedbackForm.handleSubmit(onSubmit)}
 				>
-					<div>
+					<div className="grid grid-cols-3 gap-2">
 						<FormField
 							control={feedbackForm.control}
 							name="name"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="col-span-2">
 									<FormLabel>Nome (opcional)</FormLabel>
 									<FormControl>
 										<Input type="text" { ...field } placeholder="Anakin Skywalker" />
 									</FormControl>
 									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={feedbackForm.control}
+							name="type"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Tipo</FormLabel>
+									<FormControl>
+										<Select
+											value={field.value}
+											onValueChange={field.onChange}
+										>
+											<SelectTrigger className="min-w-full">
+												<SelectValue placeholder="Selecione um tipo" />
+											</SelectTrigger>
+											<SelectContent className="min-w-full">
+												<SelectGroup>
+													<SelectItem value="suggestion">Sugestão</SelectItem>
+													<SelectItem value="feedback">Feedback</SelectItem>
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+									</FormControl>
 								</FormItem>
 							)}
 						/>
@@ -53,7 +90,7 @@ export function FeedbackForm({ feedbackForm, onSubmit, loading }: FeedbackFormPr
 							name="suggestion"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Sua sugestão de melhoria</FormLabel>
+									<FormLabel>Sua sugestão ou feedback de melhoria</FormLabel>
 									<FormControl>
 										<Textarea { ...field } placeholder="My suggestion is..." />
 									</FormControl>

@@ -13,6 +13,8 @@ const tokenSchema = new Schema({
 const suggestionSchema = new Schema({
   "name": String,
   "suggestion": String,
+  "date": Date,
+  "type": String,
 });
 
 const Suggestion = models.Suggestion || model('Suggestion', suggestionSchema);
