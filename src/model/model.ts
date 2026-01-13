@@ -1,4 +1,8 @@
 import { Schema, model, models }  from 'mongoose';
+import {
+  connectToDatabase,
+  connectToDatabaseV2,
+} from "@/lib/mongoose";
 
 const tokenSchema = new Schema({
   "id_token": String,
@@ -17,7 +21,12 @@ const suggestionSchema = new Schema({
   "type": String,
 });
 
-const Suggestion = models.Suggestion || model('Suggestion', suggestionSchema);
-const Token = models.Token || model('Token', tokenSchema);
+export async function getSuggestionModel() {
+  const conn = await connectToDatabaseV2();
+  return conn.models.Suggestion || conn.model("Suggestion", suggestionSchema);
+}
 
-export { Token, Suggestion };
+export async function getTokenModel() {
+  const conn = await connectToDatabase();
+  return conn.models.Token || conn.model("Token", tokenSchema);
+}

@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Connection } from "mongoose";
 
 interface MongooseCache {
-  conn: typeof import("mongoose") | null;
-  promise: Promise<typeof import("mongoose")> | null;
+  conn: Connection | null;
+  promise: Promise<Connection> | null;
 }
 
 declare global {
@@ -22,7 +22,6 @@ const cachedV2: MongooseCache = global.mongooseV2 || {
 
 export async function connectToDatabase() {
   const MONGODB_URI = process.env.MONGODB_URI;
-
   if (!MONGODB_URI) {
     throw new Error("MONGODB_URI não definida nas variáveis de ambiente");
   }
@@ -30,9 +29,11 @@ export async function connectToDatabase() {
   if (cachedMain.conn) return cachedMain.conn;
 
   if (!cachedMain.promise) {
-    cachedMain.promise = mongoose.connect(MONGODB_URI, {
-      bufferCommands: false,
-    });
+    cachedMain.promise = mongoose
+      .createConnection(MONGODB_URI, {
+        bufferCommands: false,
+      })
+      .asPromise();
   }
 
   cachedMain.conn = await cachedMain.promise;
@@ -43,7 +44,6 @@ export async function connectToDatabase() {
 
 export async function connectToDatabaseV2() {
   const MONGODB_URI_V2 = process.env.MONGODB_URI_V2;
-
   if (!MONGODB_URI_V2) {
     throw new Error("MONGODB_URI_V2 não definida nas variáveis de ambiente");
   }
@@ -51,9 +51,11 @@ export async function connectToDatabaseV2() {
   if (cachedV2.conn) return cachedV2.conn;
 
   if (!cachedV2.promise) {
-    cachedV2.promise = mongoose.connect(MONGODB_URI_V2, {
-      bufferCommands: false,
-    });
+    cachedV2.promise = mongoose
+      .createConnection(MONGODB_URI_V2, {
+        bufferCommands: false,
+      })
+      .asPromise();
   }
 
   cachedV2.conn = await cachedV2.promise;

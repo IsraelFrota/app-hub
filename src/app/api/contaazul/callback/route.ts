@@ -1,5 +1,5 @@
 import { connectToDatabase } from '@/lib/mongoose';
-import { Token } from '@/model/model';
+import { getTokenModel } from '@/model/model';
 import { NextRequest, NextResponse } from 'next/server';
 
 const CLIENT_ID = process.env.CLIENT_ID!;
@@ -55,6 +55,8 @@ export async function GET(request: NextRequest) {
       created_at: now,
       updated_at: now,
     };
+    
+    const Token = await getTokenModel();
     await Token.create(tokenDoc);
 
     return NextResponse.json({ token: tokenData });
