@@ -1,6 +1,11 @@
 "use client";
 
 import {
+	useState,
+	useEffect,
+} from "react";
+
+import {
   Table,
   TableRow,
   TableBody,
@@ -10,16 +15,56 @@ import {
   TableCaption,
 } from "@/components/ui/table";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardTitle,
+	CardHeader,
+	CardContent,
+} from "@/components/ui/card";
+
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 
-const mockFeedback = [
-  { id: "1", date: "2026-01-01", name: "Heitor", suggestion: "Eu quero fazer um pacto com você.", type: "suggestion" },
-  { id: "2", date: "2026-01-02", name: "Aquiles", suggestion: "Não há pactos entre leões e homens.", type: "feedback" },
-  { id: "3", date: "2026-01-03", name: "", suggestion: "No meio do caminho tinha uma pedra", type: "feedback" },
-];
+type FeedbackData = {
+	id: string;
+	date: string;
+	name: string;
+	suggestion: string;
+	type: "suggestion" | "feedback";
+}
 
 export default function FeedbackPage() {
+	const [feedbacks, setFeedbacks] = useState<FeedbackData[]>([]);
+	const [loading, setLoading] = useState(false);
+
+	async function fetchAllData() {
+		try {
+			setLoading(true);
+			const response = await fetch("/api/mongo", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			});
+			if (!response.ok) {
+				toast.error("Erro ao buscar os dados");
+				return;
+			}
+
+			const { data } = await response.json();
+
+			setFeedbacks(data);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoading(false);
+		}
+	}
+
+	useEffect(() => {
+		fetchAllData();
+	}, []);
+
   return (
     <main className="min-h-screen flex justify-center items-start bg-muted/40 py-10 px-4">
       <Card className="w-full max-w-5xl shadow-lg">
@@ -30,7 +75,7 @@ export default function FeedbackPage() {
         </CardHeader>
 
         <CardContent>
-          <Table>
+          {!loading && <Table>
             <TableCaption>
               Lista de feedbacks e sugestões enviados pelos colaboradores
             </TableCaption>
@@ -45,7 +90,7 @@ export default function FeedbackPage() {
             </TableHeader>
 
             <TableBody>
-              {mockFeedback.map((feedback) => (
+              {feedbacks.map((feedback) => (
                 <TableRow
                   key={feedback.id}
                   className="hover:bg-muted/50 transition-colors"
@@ -80,7 +125,7 @@ export default function FeedbackPage() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table>}
         </CardContent>
       </Card>
     </main>
