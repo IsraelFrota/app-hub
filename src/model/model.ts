@@ -19,6 +19,7 @@ const suggestionSchema = new Schema({
   "suggestion": String,
   "date": Date,
   "type": String,
+  "vote": Number,
 });
 
 export async function getSuggestionModel() {

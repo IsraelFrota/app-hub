@@ -56,6 +56,7 @@ export default function Home() {
       suggestion: "",
       type: "suggestion",
       date: `${new Date()}`,
+      vote: 0,
     }
   });
 
@@ -72,6 +73,7 @@ export default function Home() {
           suggestion: values.suggestion,
           date: values.date,
           type: values.type,
+          vote: 0,
         }),
       });
 
