@@ -24,6 +24,8 @@ import {
 
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ThumbsUp } from "lucide-react";
 
 type FeedbackData = {
 	_id: string;
@@ -31,6 +33,17 @@ type FeedbackData = {
 	name: string;
 	suggestion: string;
 	type: "suggestion" | "feedback";
+  vote: number;
+}
+
+function hasVoted(id: string) {
+  const voted = JSON.parse(localStorage.getItem("votedSuggestions") || "[]");
+  return voted.includes(id);
+}
+
+function markAsVoted(id: string) {
+  const voted = JSON.parse(localStorage.getItem("votedSuggestions") || "[]");
+  localStorage.setItem("votedSuggestions", JSON.stringify([...voted, id]));
 }
 
 export default function FeedbackPage() {
@@ -61,6 +74,37 @@ export default function FeedbackPage() {
 		}
 	}
 
+  async function vote(id: string) {
+    if (hasVoted(id)) return;
+
+    try {
+      const response = await fetch("/api/suggestion/", {
+        method: "PATCH",
+        body: JSON.stringify({ id }),
+        headers: { "Content-Type": "application/json" }
+      });
+
+      if (!response.ok) {
+        toast.error("Erro ao registrar voto");
+        return;
+      }
+
+      setFeedbacks((prev) =>
+        prev.map((item) =>
+          item._id === id
+            ? { ...item, vote: item.vote + 1 }
+            : item
+        )
+      );
+
+      markAsVoted(id);
+      toast.success("Voto computado com sucesso!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao registrar voto");
+    }
+  }
+
 	useEffect(() => {
 		fetchAllData();
 	}, []);
@@ -86,6 +130,7 @@ export default function FeedbackPage() {
                 <TableHead className="w-[180px]">Nome</TableHead>
                 <TableHead>Conteúdo</TableHead>
                 <TableHead className="w-[120px] text-center">Tipo</TableHead>
+                <TableHead className="w-[120px] text-center">Votação</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -121,6 +166,16 @@ export default function FeedbackPage() {
                     >
                       {feedback.type === "suggestion" ? "Sugestão" : "Feedback"}
                     </Badge>
+                  </TableCell>
+
+                  <TableCell className="flex max-w-[100px] items-center justify-end">
+                    <Button
+                      disabled={hasVoted(feedback._id)}
+                      onClick={() => vote(feedback._id)}
+                      className="flex items-center gap-2 text-sm hover:cursor-pointer"
+                    >
+                      <ThumbsUp size={18} /> {feedback.vote}
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
