@@ -31,10 +31,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ThumbsUp, MessageSquare } from "lucide-react";
 
-/* =========================
-   TYPES
-========================= */
-
 type Comment = {
   _id: string;
   author: string;
@@ -52,10 +48,6 @@ type FeedbackData = {
   comments: Comment[];
 };
 
-/* =========================
-   VOTE CONTROL (LOCALSTORAGE)
-========================= */
-
 function hasVoted(id: string) {
   const voted = JSON.parse(localStorage.getItem("votedSuggestions") || "[]");
   return voted.includes(id);
@@ -66,10 +58,6 @@ function markAsVoted(id: string) {
   localStorage.setItem("votedSuggestions", JSON.stringify([...voted, id]));
 }
 
-/* =========================
-   COMPONENT
-========================= */
-
 export default function FeedbackPage() {
   const [feedbacks, setFeedbacks] = useState<FeedbackData[]>([]);
   const [loading, setLoading] = useState(false);
@@ -79,10 +67,6 @@ export default function FeedbackPage() {
 
   const [newComment, setNewComment] = useState("");
   const [author, setAuthor] = useState("");
-
-  /* =========================
-     FETCH DATA
-  ========================= */
 
   async function fetchAllData() {
     try {
@@ -102,10 +86,6 @@ export default function FeedbackPage() {
       setLoading(false);
     }
   }
-
-  /* =========================
-     VOTE
-  ========================= */
 
   async function vote(id: string) {
     if (hasVoted(id)) return;
@@ -134,10 +114,6 @@ export default function FeedbackPage() {
       toast.error("Erro ao registrar voto");
     }
   }
-
-  /* =========================
-     ADD COMMENT
-  ========================= */
 
   async function addComment(id: string) {
     if (!newComment.trim()) return;
