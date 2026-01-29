@@ -1,4 +1,4 @@
-import { Schema, model, models }  from 'mongoose';
+import { Schema, model, models, Types }  from 'mongoose';
 import {
   connectToDatabase,
   connectToDatabaseV2,
@@ -14,12 +14,38 @@ const tokenSchema = new Schema({
   "updated_at": Date
 });
 
+const commentSchema = new Schema(
+  {
+    _id: {
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId(),
+    },
+    author: {
+      type: String,
+      default: "Anônimo",
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false }
+);
+
 const suggestionSchema = new Schema({
   "name": String,
   "suggestion": String,
   "date": Date,
   "type": String,
   "vote": Number,
+  "comments": {
+    type: [commentSchema],
+    default: []
+  }
 });
 
 export async function getSuggestionModel() {
