@@ -154,7 +154,7 @@ export default function FeedbackPage() {
                     )}
                   </TableCell>
 
-                  <TableCell className="max-w-[400px] truncate">
+                  <TableCell className="max-w-[400px] break-words whitespace-normal">
                     {feedback.suggestion}
                   </TableCell>
 
