@@ -1,4 +1,4 @@
-import { Schema, model, models, Types }  from 'mongoose';
+import { Schema, Types }  from 'mongoose';
 import {
   connectToDatabase,
   connectToDatabaseV2,
