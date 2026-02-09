@@ -5,7 +5,10 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { MessageCircleMore } from 'lucide-react';
+import {
+  LogIn,
+  MessageCircleMore,
+} from 'lucide-react';
 
 import {
   Dialog,
@@ -24,10 +27,14 @@ import {
 } from "@/schema/feedbackSchema";
 
 import { ItemProps } from '@/types/Item';
+import { Form } from './_components/Form';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [openDialogFormLogin, setOpenDialogFormLogin] = useState(false);
 
   const apps: ItemProps[] = [
     { title: 'App 5S', icon: '📋', url: 'http://192.168.0.18:3001/', description: 'Sistema para realização de auditorias da metodologia 5S.' },
@@ -93,6 +100,51 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fba91f] to-[#202020] flex items-center justify-center p-6">
+      <LogIn 
+        size={24}
+        className="absolute right-3 top-5 text-white hover:cursor-pointer hover:text-gray-200"
+        onClick={() => setOpenDialogFormLogin(true)}
+      />
+
+      <Dialog
+        open={openDialogFormLogin}
+        onOpenChange={setOpenDialogFormLogin}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Login da gestão</DialogTitle>
+          </DialogHeader>
+          <Form onSubmit={(e) => {
+              e.preventDefault();
+
+              const data = new FormData(e.currentTarget);
+              const email = data.get('email');
+              const password = data.get('password');
+
+              console.log({ email, password });
+            }}
+            className="flex flex-col justify-center items-center border"
+          >
+            <Form.Header>
+              <h1 className="text-xl font-semibold">Informe suas credenciais</h1>
+            </Form.Header>
+
+            <Form.Field>
+              <Form.Label htmlFor="email">E-mail</Form.Label>
+              <Form.Input id="email" name="email" type="email" required />
+            </Form.Field>
+
+            <Form.Field>
+              <Form.Label htmlFor="password">Senha</Form.Label>
+              <Form.Input id="password" name="password" type="password" required />
+            </Form.Field>
+
+            <Form.Footer>
+              <Button type="submit" className="text-xs">Enviar</Button>
+            </Form.Footer>
+          </Form>
+        </DialogContent>
+      </Dialog>
 
       <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 w-full max-w-2xl">
 
