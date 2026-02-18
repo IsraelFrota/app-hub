@@ -112,27 +112,31 @@ export default function Home() {
         open={openDialogFormLogin}
         onOpenChange={setOpenDialogFormLogin}
       >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Login da gestão</DialogTitle>
-          </DialogHeader>
-          <Form onSubmit={async (e) => {
+        <DialogContent className="bg-white p-0 overflow-hidden rounded-lg shadow-xl border-none">
+          <div className="bg-gradient-to-r from-[#202020] to-[#fba91f] px-6 py-4">
+            <DialogTitle className="text-white text-lg font-semibold tracking-wide">
+              Login da Gestão
+            </DialogTitle>
+            <p className="text-slate-100 text-sm mt-1">
+              Acesse com suas credenciais administrativas
+            </p>
+          </div>
+
+          <Form
+            onSubmit={async (e) => {
               e.preventDefault();
 
               const data = new FormData(e.currentTarget);
-              const email = data.get('email') as string;
-              const password = data.get('password') as string;
+              const email = data.get("email") as string;
+              const password = data.get("password") as string;
 
               if (email && password) {
                 const response = await fetch("/api/user", {
                   method: "POST",
                   headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                   },
-                  body: JSON.stringify({
-                    email,
-                    password,
-                  }),
+                  body: JSON.stringify({ email, password }),
                 });
 
                 if (response.ok) {
@@ -141,24 +145,49 @@ export default function Home() {
                 }
               }
             }}
-            className="flex flex-col justify-center items-center space-y-4 border"
+            className="flex flex-col gap-6 px-6 py-8"
           >
-            <Form.Header>
-              <h1 className="text-xl font-semibold">Informe suas credenciais</h1>
-            </Form.Header>
-
-            <Form.Field className="w-1/2">
-              <Form.Label htmlFor="email">E-mail</Form.Label>
-              <Form.Input id="email" name="email" type="email" required className="border-gray-300 w-full" />
+            <Form.Field className="flex flex-col gap-2">
+              <Form.Label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
+                E-mail
+              </Form.Label>
+              <Form.Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="exemplo@email.com"
+                required
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-[#fba91f] focus:border-[#fba91f]"
+              />
             </Form.Field>
 
-            <Form.Field className="w-1/2">
-              <Form.Label htmlFor="password">Senha</Form.Label>
-              <Form.Input id="password" name="password" type="password" required className="border-gray-300 w-full" />
+            <Form.Field className="flex flex-col gap-2">
+              <Form.Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
+                Senha
+              </Form.Label>
+              <Form.Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                required
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm transition focus:outline-none focus:ring-2 focus:ring-[#fba91f] focus:border-[#fba91f]"
+              />
             </Form.Field>
 
-            <Form.Footer>
-              <Button type="submit" className="text-xs">Enviar</Button>
+            <Form.Footer className="mt-2">
+              <Button
+                type="submit"
+                className="w-full rounded-lg bg-gradient-to-r from-[#202020] to-[#fba91f] hover:cursor-pointer text-white font-medium py-2.5 hover:scale-[103%] transition duration-800 ease-in-out"
+              >
+                Entrar
+              </Button>
             </Form.Footer>
           </Form>
         </DialogContent>
