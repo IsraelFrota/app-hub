@@ -77,8 +77,12 @@ export default function FeedbackPage() {
         return;
       }
 
-      const { data } = await response.json();
-      setFeedbacks(data);
+      const { data }: { data: FeedbackData[] } = await response.json();
+      if (await verify()) {
+        setFeedbacks(data);
+        return;  
+      }
+      setFeedbacks(data.filter(item => item.type === "suggestion"));
     } catch (error) {
       console.error(error);
       toast.error("Erro ao buscar os dados");
@@ -153,6 +157,16 @@ export default function FeedbackPage() {
     } catch {
       toast.error("Erro ao adicionar comentário");
     }
+  }
+
+  async function verify() {
+    const response = await fetch("/api/session", {
+      method: "GET"
+    });
+
+    const result = await response.json();
+
+    return result.success;
   }
 
   useEffect(() => {

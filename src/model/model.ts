@@ -1,4 +1,4 @@
-import { Schema, model, models, Types }  from 'mongoose';
+import { Schema, Types }  from 'mongoose';
 import {
   connectToDatabase,
   connectToDatabaseV2,
@@ -48,6 +48,21 @@ const suggestionSchema = new Schema({
   }
 });
 
+const userSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId(),
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+});
+
 export async function getSuggestionModel() {
   const conn = await connectToDatabaseV2();
   return conn.models.Suggestion || conn.model("Suggestion", suggestionSchema);
@@ -56,4 +71,9 @@ export async function getSuggestionModel() {
 export async function getTokenModel() {
   const conn = await connectToDatabase();
   return conn.models.Token || conn.model("Token", tokenSchema);
+}
+
+export async function getUserModel() {
+  const conn = await connectToDatabaseV2();
+  return conn.models.User || conn.model("User", userSchema);
 }

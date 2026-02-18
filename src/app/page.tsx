@@ -30,6 +30,8 @@ import { ItemProps } from '@/types/Item';
 import { Form } from './_components/Form';
 import { Button } from '@/components/ui/button';
 
+import { loginAction } from "@/app/_server/action";
+
 export default function Home() {
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -114,29 +116,45 @@ export default function Home() {
           <DialogHeader>
             <DialogTitle>Login da gestão</DialogTitle>
           </DialogHeader>
-          <Form onSubmit={(e) => {
+          <Form onSubmit={async (e) => {
               e.preventDefault();
 
               const data = new FormData(e.currentTarget);
-              const email = data.get('email');
-              const password = data.get('password');
+              const email = data.get('email') as string;
+              const password = data.get('password') as string;
 
-              console.log({ email, password });
+              if (email && password) {
+                const response = await fetch("/api/user", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    email,
+                    password,
+                  }),
+                });
+
+                if (response.ok) {
+                  loginAction({ email, password });
+                  setOpenDialogFormLogin(false);
+                }
+              }
             }}
-            className="flex flex-col justify-center items-center border"
+            className="flex flex-col justify-center items-center space-y-4 border"
           >
             <Form.Header>
               <h1 className="text-xl font-semibold">Informe suas credenciais</h1>
             </Form.Header>
 
-            <Form.Field>
+            <Form.Field className="w-1/2">
               <Form.Label htmlFor="email">E-mail</Form.Label>
-              <Form.Input id="email" name="email" type="email" required />
+              <Form.Input id="email" name="email" type="email" required className="border-gray-300 w-full" />
             </Form.Field>
 
-            <Form.Field>
+            <Form.Field className="w-1/2">
               <Form.Label htmlFor="password">Senha</Form.Label>
-              <Form.Input id="password" name="password" type="password" required />
+              <Form.Input id="password" name="password" type="password" required className="border-gray-300 w-full" />
             </Form.Field>
 
             <Form.Footer>
