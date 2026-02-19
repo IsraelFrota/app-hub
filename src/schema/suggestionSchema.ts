@@ -5,7 +5,7 @@ export const suggestionSchema = z.object({
 		.string()
 		.toLowerCase()
 		.optional(),
-	suggestion: z
+	text: z
 		.string()
 		.min(3, "Insira uma mensagem significativa"),
 	type: z

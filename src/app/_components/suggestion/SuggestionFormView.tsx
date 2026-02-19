@@ -91,7 +91,7 @@ export function SuggestionFormView({
 					<div>
 						<FormField
 							control={suggestionForm.control}
-							name="suggestion"
+							name="text"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Sua sugestão ou feedback de melhoria</FormLabel>

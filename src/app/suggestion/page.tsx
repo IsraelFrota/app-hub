@@ -42,7 +42,7 @@ type SuggestionData = {
   _id: string;
   date: string;
   name: string;
-  suggestion: string;
+  text: string;
   type: "suggestion" | "feedback";
   vote: number;
   comments: Comment[];
@@ -221,7 +221,7 @@ export default function SuggestionPage() {
                     </TableCell>
 
                     <TableCell className="break-words whitespace-normal align-middle">
-                      {suggestion.suggestion}
+                      {suggestion.text}
                     </TableCell>
 
                     <TableCell className="text-center">
@@ -281,7 +281,7 @@ export default function SuggestionPage() {
           {selectedSuggestion && (
             <div className="space-y-4">
               <div className="p-3 rounded-md bg-muted text-sm">
-                {selectedSuggestion.suggestion}
+                {selectedSuggestion.text}
               </div>
 
               <div className="space-y-2 max-h-36 overflow-y-auto">

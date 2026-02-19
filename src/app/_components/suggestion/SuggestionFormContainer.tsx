@@ -21,7 +21,7 @@ export function SuggestionFormContainer() {
     mode: "onChange",
     defaultValues: {
       name: "",
-      suggestion: "",
+      text: "",
       type: "suggestion",
       date: `${new Date()}`,
       vote: 0,
@@ -38,7 +38,7 @@ export function SuggestionFormContainer() {
         },
         body: JSON.stringify({
           name: values.name,
-          suggestion: values.suggestion,
+          text: values.text,
           date: values.date,
           type: values.type,
           vote: 0,
