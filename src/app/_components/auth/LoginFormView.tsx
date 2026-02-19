@@ -7,10 +7,12 @@ import {
 	FormItem,
 	FormLabel,
 } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 
-import { type LoginForm } from "@/schema/loginSchema";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+import { type LoginForm } from "@/schema/loginSchema";
 
 type LoginFormProps = {
 	loginForm: ReturnType<typeof useForm<LoginForm>>;
@@ -41,7 +43,7 @@ export function LoginFormView({
 										<Input
 											{ ...field }
 											type="email"
-											placeholder="example@email.com.br"
+											placeholder="anakinskywalker@email.com.br"
 										/>
 									</FormControl>
 								</FormItem>
@@ -65,7 +67,15 @@ export function LoginFormView({
 							)}
 						/>
 					</div>
-					<Button type="submit" disabled={loading}>Entrar</Button>
+
+					<Separator />
+
+					<Button
+						type="submit"
+						disabled={loading}
+					>
+						Entrar
+					</Button>
 				</form>
 			</Form>
 		</fieldset>
