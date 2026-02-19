@@ -73,8 +73,8 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
             {filteredApps.length > 0 ? (
-              filteredApps.map((app, index) => (
-                <AppCard item={app} key={index} />
+              filteredApps.map((app) => (
+                <AppCard item={app} key={app.id} />
               ))
             ) : (
               <p className="text-sm text-gray-300 col-span-full text-center">
