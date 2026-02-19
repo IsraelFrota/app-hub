@@ -62,7 +62,7 @@ export const apps: App[] = [
 	{
 		title: 'Feedbacks',
 		icon: '📃',
-		url: '/feedback',
+		url: '/suggestion',
 		description: 'Página com os feedbacks e sugestões dos colaboradores.'
 	},
 ];
