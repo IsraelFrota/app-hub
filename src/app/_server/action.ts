@@ -2,9 +2,9 @@
 
 import { cookies } from "next/headers";
 
-import { type LoginSchema, loginSchema } from "./schema";
+import { type LoginForm, loginSchema } from "@/schema/loginSchema";
 
-export async function loginAction(data: LoginSchema) {
+export async function loginAction(data: LoginForm) {
 	const parsed = loginSchema.safeParse(data);
 
 	if(!parsed.success) {
@@ -20,16 +20,4 @@ export async function loginAction(data: LoginSchema) {
 		sameSite: "strict",
 		path: "/"
 	});
-}
-
-export async function createUserAction(data: LoginSchema) {
-	const parsed = loginSchema.safeParse(data);
-
-	if(!parsed.success) {
-		return {
-			success: false,
-			errors: parsed.error.flatten().fieldErrors,
-		};
-	}
-	
 }
