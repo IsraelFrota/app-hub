@@ -38,11 +38,11 @@ type Comment = {
   date: string;
 };
 
-type FeedbackData = {
+type SuggestionData = {
   _id: string;
   date: string;
   name: string;
-  suggestion: string;
+  text: string;
   type: "suggestion" | "feedback";
   vote: number;
   comments: Comment[];
@@ -58,12 +58,12 @@ function markAsVoted(id: string) {
   localStorage.setItem("votedSuggestions", JSON.stringify([...voted, id]));
 }
 
-export default function FeedbackPage() {
-  const [feedbacks, setFeedbacks] = useState<FeedbackData[]>([]);
+export default function SuggestionPage() {
+  const [suggestions, setSuggestions] = useState<SuggestionData[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [selectedFeedback, setSelectedFeedback] =
-    useState<FeedbackData | null>(null);
+  const [selectedSuggestion, setSelectedSuggestion] =
+    useState<SuggestionData | null>(null);
 
   const [newComment, setNewComment] = useState("");
   const [author, setAuthor] = useState("");
@@ -77,8 +77,12 @@ export default function FeedbackPage() {
         return;
       }
 
-      const { data } = await response.json();
-      setFeedbacks(data);
+      const { data }: { data: SuggestionData[] } = await response.json();
+      if (await verify()) {
+        setSuggestions(data);
+        return;  
+      }
+      setSuggestions(data.filter(item => item.type === "suggestion"));
     } catch (error) {
       console.error(error);
       toast.error("Erro ao buscar os dados");
@@ -102,7 +106,7 @@ export default function FeedbackPage() {
         return;
       }
 
-      setFeedbacks((prev) =>
+      setSuggestions((prev) =>
         prev.map((item) =>
           item._id === id ? { ...item, vote: item.vote + 1 } : item
         )
@@ -117,7 +121,6 @@ export default function FeedbackPage() {
 
   async function addComment(id: string) {
     if (!newComment.trim()) return;
-    console.log(selectedFeedback);
     try {
       const response = await fetch("/api/comment", {
         method: "POST",
@@ -136,7 +139,7 @@ export default function FeedbackPage() {
 
       const { comment } = await response.json();
 
-      setFeedbacks((prev) =>
+      setSuggestions((prev) =>
         prev.map((item) =>
           item._id === id
             ? { ...item, comments: [...item.comments, comment] }
@@ -144,7 +147,7 @@ export default function FeedbackPage() {
         )
       );
 
-      setSelectedFeedback((prev) =>
+      setSelectedSuggestion((prev) =>
         prev ? { ...prev, comments: [...prev.comments, comment] } : prev
       );
 
@@ -153,6 +156,16 @@ export default function FeedbackPage() {
     } catch {
       toast.error("Erro ao adicionar comentário");
     }
+  }
+
+  async function verify() {
+    const response = await fetch("/api/session", {
+      method: "GET"
+    });
+
+    const result = await response.json();
+
+    return result.success;
   }
 
   useEffect(() => {
@@ -188,18 +201,18 @@ export default function FeedbackPage() {
               </TableHeader>
 
               <TableBody>
-                {feedbacks.map((feedback) => (
+                {suggestions.map((suggestion) => (
                   <TableRow
-                    key={feedback._id}
+                    key={suggestion._id}
                     className="hover:bg-muted/50 transition-colors"
                   >
-                    <TableCell className="text-sm text-muted-foreground">
-                      {new Date(feedback.date).toLocaleDateString("pt-BR")}
+                    <TableCell className="align-middle text-sm text-muted-foreground">
+                      {new Date(suggestion.date).toLocaleDateString("pt-BR")}
                     </TableCell>
 
                     <TableCell>
-                      {feedback.name ? (
-                        feedback.name
+                      {suggestion.name ? (
+                        suggestion.name
                       ) : (
                         <span className="italic text-muted-foreground">
                           Anônimo
@@ -207,44 +220,46 @@ export default function FeedbackPage() {
                       )}
                     </TableCell>
 
-                    <TableCell className="max-w-[400px] break-words whitespace-normal">
-                      {feedback.suggestion}
+                    <TableCell className="break-words whitespace-normal align-middle">
+                      {suggestion.text}
                     </TableCell>
 
                     <TableCell className="text-center">
                       <Badge
                         variant={
-                          feedback.type === "suggestion"
+                          suggestion.type === "suggestion"
                             ? "default"
                             : "secondary"
                         }
                       >
-                        {feedback.type === "suggestion"
+                        {suggestion.type === "suggestion"
                           ? "Sugestão"
                           : "Feedback"}
                       </Badge>
                     </TableCell>
 
-                    <TableCell className="flex items-center justify-end gap-2">
-                      <Button
-                        size="sm"
-                        disabled={hasVoted(feedback._id)}
-                        onClick={() => vote(feedback._id)}
-                        className="flex items-center gap-1"
-                      >
-                        <ThumbsUp size={16} />
-                        {feedback.vote}
-                      </Button>
+                    <TableCell className="text-right align-middle">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          size="sm"
+                          disabled={hasVoted(suggestion._id)}
+                          onClick={() => vote(suggestion._id)}
+                          className="flex items-center gap-1"
+                        >
+                          <ThumbsUp size={16} />
+                          {suggestion.vote}
+                        </Button>
 
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setSelectedFeedback(feedback)}
-                        className="flex items-center gap-1"
-                      >
-                        <MessageSquare size={16} />
-                        {feedback.comments.length}
-                      </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedSuggestion(suggestion)}
+                          className="flex items-center gap-1"
+                        >
+                          <MessageSquare size={16} />
+                          {suggestion.comments.length}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -255,28 +270,28 @@ export default function FeedbackPage() {
       </Card>
 
       <Dialog
-        open={!!selectedFeedback}
-        onOpenChange={() => {setAuthor(""); setSelectedFeedback(null)}}
+        open={!!selectedSuggestion}
+        onOpenChange={() => {setAuthor(""); setSelectedSuggestion(null)}}
       >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Comentários da Sugestão</DialogTitle>
           </DialogHeader>
 
-          {selectedFeedback && (
+          {selectedSuggestion && (
             <div className="space-y-4">
               <div className="p-3 rounded-md bg-muted text-sm">
-                {selectedFeedback.suggestion}
+                {selectedSuggestion.text}
               </div>
 
               <div className="space-y-2 max-h-36 overflow-y-auto">
-                {selectedFeedback.comments.length === 0 && (
+                {selectedSuggestion.comments.length === 0 && (
                   <p className="text-sm text-muted-foreground">
                     Nenhum comentário ainda.
                   </p>
                 )}
 
-                {selectedFeedback.comments.map((comment) => (
+                {selectedSuggestion.comments.map((comment) => (
                   <div
                     key={comment._id}
                     className="p-3 rounded-md border text-sm"
@@ -309,7 +324,7 @@ export default function FeedbackPage() {
                 </div>
                 <Button
                   size="sm"
-                  onClick={() => addComment(selectedFeedback._id)}
+                  onClick={() => addComment(selectedSuggestion._id)}
                 >
                   Comentar
                 </Button>

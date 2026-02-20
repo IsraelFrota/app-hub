@@ -1,155 +1,105 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { MessageCircleMore } from 'lucide-react';
 
 import {
-  Dialog,
-  DialogTitle,
-  DialogHeader,
-  DialogContent,
-} from '@/components/ui/dialog';
-import { toast } from "sonner";
+  LogIn,
+  MessageCircleMore,
+} from 'lucide-react';
+
 import { Separator } from '@/components/ui/separator';
 
-import { FeedbackForm } from './_components/FeedbackForm';
+import { apps } from "@/lib/link";
 
-import {
-  FeedbackType,
-  feedbackSchema,
-} from "@/schema/feedbackSchema";
-
-import { ItemProps } from '@/types/Item';
+import { AppCard } from './_components/card/AppCard';
+import { AppDialog } from './_components/dialog/AppDialog';
+import { LoginFormContainer } from './_components/auth/LoginFormContainer';
+import { SuggestionFormContainer } from './_components/suggestion/SuggestionFormContainer';
 
 export default function Home() {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const apps: ItemProps[] = [
-    { title: 'App 5S', icon: '📋', url: 'http://192.168.0.18:3001/', description: 'Sistema para realização de auditorias da metodologia 5S.' },
-    { title: 'Critérios de Auditoria', icon: '📖', url: 'https://docs.google.com/spreadsheets/d/10YdvT6qfqdJuHmHZp_KXCZ_8DV_h6C1bkgpsDwVKqsY/edit?usp=sharing', description: 'Planilha com os critérios de avaliação para a auditoria 5S.' },
-    { title: 'Catálogo de Livros', icon: '📚', url: 'https://docs.google.com/spreadsheets/d/1Qd5tLyTvan9-EJuW2g_UYQaV7HRADrMuA402mDRNo2o/edit?gid=921363456#gid=921363456', description: 'Planilha do Google com o catálogo de livros disponíveis.' },
-    { title: 'Dashboard 5S', icon: '📊', url: 'http://192.168.0.18:3001/ui/dashboard', description: 'Painel para visualização dos resultados das auditorias 5S.' },
-    { title: 'IF Music', icon: '🎵', url: 'http://192.168.0.18:9078/', description: 'Player de música local para streaming interno.' },
-    { title: 'IF Controle de Ponto', icon: '🕰️', url: 'http://192.168.0.18:3008/', description: 'Sistema digital de controle de ponto para estagiários.' },
-    { title: 'Servidor de Arquivos', icon: '🗄️', url: 'http://192.168.0.99:8081/', description: 'Servidor local para gerenciamento e acesso a arquivos compartilhados.' },
-    { title: 'Office Track', icon: '🗂️', url: 'http://192.168.0.18:3010/', description: 'Sistema para colaboração e organização das atividades da empresa no setor de recursos humanos.' },
-    { title: 'Horário do Lanche', icon: '🍔', url: 'https://docs.google.com/spreadsheets/d/1Ti7rzzUv6jqkb_9ih_zK3D9nyJwS8kPiTagHesTGHq4/edit?gid=0#gid=0', description: 'Planilha do Google contendo o cronograma de lanches.' },
-    { title: 'Feedbacks', icon: '📃', url: '/feedback', description: 'Página com os feedbacks e sugestões dos colaboradores.' },
-  ];
-
   const [search, setSearch] = useState('');
+  
+  const [isSuggestionDialogOpen, setIsSuggestionDialogOpen] = useState(false);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   const filteredApps = apps.filter(app =>
     app.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  const feedbackForm = useForm<FeedbackType>({
-    resolver: zodResolver(feedbackSchema),
-    mode: "onChange",
-    defaultValues: {
-      name: "",
-      suggestion: "",
-      type: "suggestion",
-      date: `${new Date()}`,
-      vote: 0,
-    }
-  });
-
-  async function onSubmit(values: FeedbackType) {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/mongo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: values.name,
-          suggestion: values.suggestion,
-          date: values.date,
-          type: values.type,
-          vote: 0,
-        }),
-      });
-
-      if (!response.ok) {
-        toast.error("Error ao registrar seu feedback");
-        return;
-      }
-
-      toast.success("Feedback registrado com sucesso!");
-      setOpenDialog(false);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fba91f] to-[#202020] flex items-center justify-center p-6">
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-[#fba91f] to-[#202020] flex items-center justify-center px-4 py-6">
+        
+        <div className="relative w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-lg p-4 sm:p-6 md:p-8">
 
-      <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 w-full max-w-2xl">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-semibold text-white">
+                AppHub
+              </h1>
+              <p className="text-gray-200 text-sm mt-1">
+                Aplicativos
+              </p>
+            </div>
 
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-semibold text-white mb-1">AppHub</h1>
-            <p className="text-gray-200 mb-4 text-sm">Aplicativos</p>
-          </div>
-          
-          <MessageCircleMore 
-            size={24}
-            className="text-white hover:cursor-pointer hover:text-[#202020]"
-            onClick={() => setOpenDialog(true)}
-          />
-        </div>
-
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Feedback de melhoria</DialogTitle>
-            </DialogHeader>
-            <Separator />
-            <FeedbackForm feedbackForm={feedbackForm} onSubmit={onSubmit} loading={loading} />
-          </DialogContent>
-        </Dialog>
-
-        <Separator />
-
-        <input
-          type="text"
-          placeholder="Buscar"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full p-2 mb-6 mt-5 rounded-xl bg-white/10 border border-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
-        />
-
-        <div className="grid grid-cols-2 gap-4">
-          {filteredApps.length > 0 ? (
-            filteredApps.map((app, index) => (
-              <div
-                key={index}
-                className="
-                  bg-black/50 backdrop-blur-xl border border-black/10 shadow-lg rounded-xl p-4 flex items-center gap-3 transition hover:bg-black/70 cursor-pointer"
-                onClick={() => window.open(app.url, '_blank')}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsSuggestionDialogOpen(true)}
+                className="p-2 rounded-md hover:bg-white/10 transition"
+                aria-label="Abrir sugestões"
               >
-                <span className="text-2xl">{app.icon}</span>
-                <div>
-                  <p className="text-white font-medium">{app.title}</p>
-                  <p className="text-gray-200 text-xs break">{app.description}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-sm text-gray-300 col-span-2">No applications found.</p>
-          )}
+                <MessageCircleMore className="text-white w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              <button
+                onClick={() => setIsLoginDialogOpen(true)}
+                className="p-2 rounded-md hover:bg-white/10 transition"
+                aria-label="Login"
+              >
+                <LogIn className="text-white w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            </div>
+          </div>
+
+          <Separator className="my-5 bg-white/20" />
+
+          <input
+            type="text"
+            placeholder="Buscar"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full p-3 rounded-md bg-white/10 border border-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-white/30 text-sm sm:text-base"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            {filteredApps.length > 0 ? (
+              filteredApps.map((app) => (
+                <AppCard item={app} key={app.id} />
+              ))
+            ) : (
+              <p className="text-sm text-gray-300 col-span-full text-center">
+                No applications found.
+              </p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      <AppDialog
+        title="Autenticação da Gestão"
+        open={isLoginDialogOpen}
+        onOpenChange={setIsLoginDialogOpen}
+      >
+        <LoginFormContainer />
+      </AppDialog>
+
+      <AppDialog
+        title="Sugestões e Feedbacks de Melhorias"
+        open={isSuggestionDialogOpen}
+        onOpenChange={setIsSuggestionDialogOpen}
+      >
+        <SuggestionFormContainer />
+      </AppDialog>
+    </>
   );
 }

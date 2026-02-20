@@ -37,15 +37,48 @@ const commentSchema = new Schema(
 );
 
 const suggestionSchema = new Schema({
-  "name": String,
-  "suggestion": String,
-  "date": Date,
-  "type": String,
-  "vote": Number,
-  "comments": {
+  name: {
+    type: String,
+  },
+    text: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 5
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  type: {
+    type: String,
+    enum: ["suggestion", "feedback"],
+    required: true,
+  },
+  vote: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  comments: {
     type: [commentSchema],
     default: []
   }
+});
+
+const userSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId(),
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
 });
 
 export async function getSuggestionModel() {
@@ -56,4 +89,9 @@ export async function getSuggestionModel() {
 export async function getTokenModel() {
   const conn = await connectToDatabase();
   return conn.models.Token || conn.model("Token", tokenSchema);
+}
+
+export async function getUserModel() {
+  const conn = await connectToDatabaseV2();
+  return conn.models.User || conn.model("User", userSchema);
 }

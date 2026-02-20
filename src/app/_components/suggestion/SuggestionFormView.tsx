@@ -26,31 +26,35 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 
-import { FeedbackType } from "@/schema/feedbackSchema";
+import { type SuggestionForm } from "@/schema/suggestionSchema";
 
-type FeedbackFormProps = {
-	feedbackForm: ReturnType<typeof useForm<FeedbackType>>;
-	onSubmit: (value: FeedbackType) => Promise<void>;
+type SuggestionFormProps = {
+	suggestionForm: ReturnType<typeof useForm<SuggestionForm>>;
+	onSubmit: (value: SuggestionForm) => Promise<void>;
 	loading: boolean;
-}
+};
 
-export function FeedbackForm({ feedbackForm, onSubmit, loading }: FeedbackFormProps) {
+export function SuggestionFormView({
+	loading,
+	onSubmit,
+	suggestionForm,
+}: SuggestionFormProps) {
 	return (
 		<fieldset disabled={loading}>
-			<Form {...feedbackForm}>
+			<Form {...suggestionForm}>
 				<form
 					className="space-y-3"
-					onSubmit={feedbackForm.handleSubmit(onSubmit)}
+					onSubmit={suggestionForm.handleSubmit(onSubmit)}
 				>
 					<div className="grid grid-cols-3 gap-2">
 						<FormField
-							control={feedbackForm.control}
+							control={suggestionForm.control}
 							name="name"
 							render={({ field }) => (
 								<FormItem className="col-span-2">
 									<FormLabel>Nome (opcional)</FormLabel>
 									<FormControl>
-										<Input type="text" { ...field } placeholder="Anakin Skywalker" />
+										<Input type="text" {...field} placeholder="Anakin Skywalker" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -58,7 +62,7 @@ export function FeedbackForm({ feedbackForm, onSubmit, loading }: FeedbackFormPr
 						/>
 
 						<FormField
-							control={feedbackForm.control}
+							control={suggestionForm.control}
 							name="type"
 							render={({ field }) => (
 								<FormItem>
@@ -86,13 +90,13 @@ export function FeedbackForm({ feedbackForm, onSubmit, loading }: FeedbackFormPr
 
 					<div>
 						<FormField
-							control={feedbackForm.control}
-							name="suggestion"
+							control={suggestionForm.control}
+							name="text"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Sua sugestão ou feedback de melhoria</FormLabel>
 									<FormControl>
-										<Textarea { ...field } placeholder="My suggestion is..." />
+										<Textarea {...field} placeholder="My suggestion is..." />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -106,7 +110,7 @@ export function FeedbackForm({ feedbackForm, onSubmit, loading }: FeedbackFormPr
 						type="submit"
 						disabled={loading}
 					>
-						Enviar Feedback
+						Enviar
 					</Button>
 				</form>
 			</Form>
