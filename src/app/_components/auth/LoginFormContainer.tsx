@@ -3,21 +3,19 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { toast } from "sonner";
-
-import { LoginFormView } from "./LoginFormView";
 import { loginAction } from "@/app/_server/action";
-
 import {
 	loginSchema,
-	type LoginForm,
-} from "@/schema/loginSchema";
+	type LoginFormType,
+} from "@/schemas/login.schema";
+import { LoginFormView } from "./LoginFormView";
+
 
 export function LoginFormContainer() {
 	const [loading, setLoading] = useState(false);
 
-	const loginForm = useForm<LoginForm>({
+	const loginForm = useForm<LoginFormType>({
 		resolver: zodResolver(loginSchema),
 		mode: "onChange",
 		defaultValues: {
@@ -26,7 +24,7 @@ export function LoginFormContainer() {
 		}
 	});
 
-	async function onSubmit(values: LoginForm) {
+	async function onSubmit(values: LoginFormType) {
 		setLoading(true);
 		try {
 			const response = await fetch("/api/user", {

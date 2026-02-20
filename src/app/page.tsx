@@ -1,20 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-
 import {
   LogIn,
   MessageCircleMore,
 } from 'lucide-react';
-
 import { Separator } from '@/components/ui/separator';
-
 import { apps } from "@/lib/link";
+import { AppCard } from '@/app/_components/card/AppCard';
+import { AppDialog } from '@/app/_components/dialog/AppDialog';
+import { LoginFormContainer } from '@/app/_components/auth/LoginFormContainer';
+import { SuggestionFormContainer } from '@/app/_components/suggestion/SuggestionFormContainer';
 
-import { AppCard } from './_components/card/AppCard';
-import { AppDialog } from './_components/dialog/AppDialog';
-import { LoginFormContainer } from './_components/auth/LoginFormContainer';
-import { SuggestionFormContainer } from './_components/suggestion/SuggestionFormContainer';
 
 export default function Home() {
   const [search, setSearch] = useState('');

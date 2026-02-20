@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+
 export const suggestionSchema = z.object({
 	name: z
 		.string()
@@ -16,4 +17,4 @@ export const suggestionSchema = z.object({
 		.number(),
 });
 
-export type SuggestionForm = z.infer<typeof suggestionSchema>;
+export type SuggestionFormType = z.infer<typeof suggestionSchema>;

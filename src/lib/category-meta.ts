@@ -1,5 +1,6 @@
 import { AppCategory } from "@/lib/link";
 
+
 export const categoryMeta: Record<
   AppCategory,
   { label: string; badgeClass: string }

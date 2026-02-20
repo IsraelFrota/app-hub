@@ -1,8 +1,9 @@
 'use client';
 
+import { SiLinux } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { SiLinux } from "react-icons/si";
+
 
 export default function ContaAzul() {
 	function handleRedirectToContaAzul() {

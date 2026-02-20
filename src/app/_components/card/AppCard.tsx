@@ -1,6 +1,7 @@
 import { type App } from "@/lib/link";
 import { categoryMeta } from "@/lib/category-meta";
 
+
 type AppCardProps = {
 	item: App;
 };

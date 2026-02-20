@@ -3,20 +3,18 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { toast } from "sonner";
-
 import { SuggestionFormView } from "@/app/_components/suggestion/SuggestionFormView";
-
 import {
   suggestionSchema,
-  type SuggestionForm,
-} from "@/schema/suggestionSchema";
+  type SuggestionFormType,
+} from "@/schemas/suggestion.schema";
+
 
 export function SuggestionFormContainer() {
   const [loading, setLoading] = useState(false);
 
-  const suggestionForm = useForm<SuggestionForm>({
+  const suggestionForm = useForm<SuggestionFormType>({
     resolver: zodResolver(suggestionSchema),
     mode: "onChange",
     defaultValues: {
@@ -28,10 +26,10 @@ export function SuggestionFormContainer() {
     }
   });
 
-  async function onSubmit(values: SuggestionForm) {
+  async function onSubmit(values: SuggestionFormType) {
     setLoading(true);
     try {
-      const response = await fetch("/api/mongo", {
+      const response = await fetch("/api/suggestion", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

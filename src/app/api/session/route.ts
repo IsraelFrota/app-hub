@@ -1,11 +1,11 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { verifySession } from "@/services/session.service";
+
 
 export async function GET(request: NextRequest) {
-	const cookie = await cookies();
-	const token = cookie.get("session");
-	if (token?.name === "session" && token.value === process.env.TOKEN) {
-		return NextResponse.json({ success: true }, { status: 200 });
-	}
-	return NextResponse.json({ success: false }, { status: 400 });
+	const success = await verifySession();
+	return NextResponse.json(
+		{ success }, 
+		{ status: success ? 200 : 400 }
+	);
 }

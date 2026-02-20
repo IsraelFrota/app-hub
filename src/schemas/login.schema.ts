@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+
 export const loginSchema = z.object({
 	email: z
 		.string()
@@ -11,4 +12,4 @@ export const loginSchema = z.object({
 		.nonempty("A senha é obrigatória"),
 });
 
-export type LoginForm = z.infer<typeof loginSchema>;
+export type LoginFormType = z.infer<typeof loginSchema>;
