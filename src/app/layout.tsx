@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://app-hub-puce.vercel.app/"),
   title: "App Hub",

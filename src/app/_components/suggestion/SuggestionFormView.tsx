@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
 import {
 	Form,
 	FormControl,
@@ -10,7 +9,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-
 import {
 	Select,
 	SelectContent,
@@ -20,17 +18,16 @@ import {
 	SelectValue,
 
 } from "@/components/ui/select"
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { type SuggestionFormType } from "@/schemas/suggestion.schema";
 
-import { type SuggestionForm } from "@/schema/suggestionSchema";
 
 type SuggestionFormProps = {
-	suggestionForm: ReturnType<typeof useForm<SuggestionForm>>;
-	onSubmit: (value: SuggestionForm) => Promise<void>;
+	suggestionForm: ReturnType<typeof useForm<SuggestionFormType>>;
+	onSubmit: (value: SuggestionFormType) => Promise<void>;
 	loading: boolean;
 };
 

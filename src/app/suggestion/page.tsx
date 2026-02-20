@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
+import { ThumbsUp, MessageSquare } from "lucide-react";
 import {
   Table,
   TableRow,
@@ -11,25 +13,21 @@ import {
   TableHeader,
   TableCaption,
 } from "@/components/ui/table";
-
 import {
   Card,
   CardTitle,
   CardHeader,
   CardContent,
 } from "@/components/ui/card";
-
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, MessageSquare } from "lucide-react";
+
 
 type Comment = {
   _id: string;
@@ -71,7 +69,7 @@ export default function SuggestionPage() {
   async function fetchAllData() {
     try {
       setLoading(true);
-      const response = await fetch("/api/mongo");
+      const response = await fetch("/api/suggestion");
       if (!response.ok) {
         toast.error("Erro ao buscar os dados");
         return;

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-
+import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogTitle,
@@ -9,7 +9,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-import { Separator } from "@/components/ui/separator";
 
 type DialogSize = "sm" | "md" | "lg" | "xl";
 

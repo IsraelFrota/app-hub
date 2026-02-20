@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-
 import {
 	Form,
 	FormControl,
@@ -8,15 +7,14 @@ import {
 	FormLabel,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { LoginFormType } from "@/schemas/login.schema";
 
-import { type LoginForm } from "@/schema/loginSchema";
 
 type LoginFormProps = {
-	loginForm: ReturnType<typeof useForm<LoginForm>>;
-	onSubmit: (value: LoginForm) => Promise<void>;
+	loginForm: ReturnType<typeof useForm<LoginFormType>>;
+	onSubmit: (value: LoginFormType) => Promise<void>;
 	loading: boolean;
 };
 

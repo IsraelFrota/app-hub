@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+
 export type AppCategory =
   | 'auditoria'
   | 'rh'
