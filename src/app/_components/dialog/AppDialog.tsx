@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 import {
   Dialog,
@@ -7,11 +7,11 @@ import {
   DialogHeader,
   DialogContent,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
-import { Separator } from "@/components/ui/separator";
+import { Separator } from '@/components/ui/separator';
 
-type DialogSize = "sm" | "md" | "lg" | "xl";
+type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
 
 type AppDialogProps = {
   title: string;
@@ -24,10 +24,10 @@ type AppDialogProps = {
 };
 
 const sizeMap: Record<DialogSize, string> = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-  xl: "max-w-2xl",
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-2xl',
 };
 
 export function AppDialog({
@@ -36,7 +36,7 @@ export function AppDialog({
   open,
   onOpenChange,
   footer,
-  size = "md",
+  size = 'md',
   contentClassName,
 }: AppDialogProps) {
   return (
@@ -50,14 +50,14 @@ export function AppDialog({
 
         <Separator />
 
-        <div className="py-2">
+        <div className='py-2'>
           {children}
         </div>
 
         {footer && (
           <>
             <Separator />
-            <DialogFooter className="pt-3">
+            <DialogFooter className='pt-3'>
               {footer}
             </DialogFooter>
           </>

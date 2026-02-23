@@ -1,18 +1,17 @@
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
 import {
 	Form,
-	FormControl,
-	FormField,
 	FormItem,
+	FormField,
 	FormLabel,
-} from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
+	FormControl,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-
-import { type LoginForm } from "@/schema/loginSchema";
+import { type LoginForm } from '@/lib/schemas/login.schema';
 
 type LoginFormProps = {
 	loginForm: ReturnType<typeof useForm<LoginForm>>;
@@ -29,21 +28,21 @@ export function LoginFormView({
 		<fieldset disabled={loading}>
 			<Form { ...loginForm }>
 				<form
-					className="space-y-3"
+					className='space-y-3'
 					onSubmit={loginForm.handleSubmit(onSubmit)}
 				>
-					<div className="flex flex-col space-y-2">
+					<div className='flex flex-col space-y-2'>
 						<FormField
 							control={loginForm.control}
-							name="email"
+							name='email'
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>E-mail</FormLabel>
 									<FormControl>
 										<Input
 											{ ...field }
-											type="email"
-											placeholder="anakinskywalker@email.com.br"
+											type='email'
+											placeholder='anakinskywalker@email.com.br'
 										/>
 									</FormControl>
 								</FormItem>
@@ -52,15 +51,15 @@ export function LoginFormView({
 
 						<FormField
 							control={loginForm.control}
-							name="password"
+							name='password'
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Senha</FormLabel>
 									<FormControl>
 										<Input
 											{ ...field }
-											type="password"
-											placeholder="**********"
+											type='password'
+											placeholder='**********'
 										/>
 									</FormControl>
 								</FormItem>
@@ -71,7 +70,7 @@ export function LoginFormView({
 					<Separator />
 
 					<Button
-						type="submit"
+						type='submit'
 						disabled={loading}
 					>
 						Entrar
