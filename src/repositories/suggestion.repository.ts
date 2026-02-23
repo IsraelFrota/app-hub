@@ -4,14 +4,23 @@ import {
   getSuggestionModel,
 } from '@/lib/models/suggestion';
 
+type ListSuggestionsOptions = {
+  publicOnly?: boolean;
+};
+
 export async function createSuggestion(data: Suggestion) {
   const SuggestionModel = await getSuggestionModel();
   return SuggestionModel.create(data);
 }
 
-export async function listSuggestions() {
+export async function listSuggestions(
+  options?: ListSuggestionsOptions
+) {
   const SuggestionModel = await getSuggestionModel();
-  return SuggestionModel.find().lean();
+  const query = options?.publicOnly
+    ? { type: 'suggestion' }
+    : {};
+  return SuggestionModel.find(query).lean();
 }
 
 export async function incrementVote(id: string) {

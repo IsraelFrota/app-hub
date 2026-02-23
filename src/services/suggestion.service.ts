@@ -5,6 +5,7 @@ import {
 	listSuggestions,
   createSuggestion,
 } from '@/repositories/suggestion.repository';
+import { isAuthenticated } from '@/lib/auth';
 
 export async function createSuggestionService(
   data: Omit<Suggestion, '_id' | 'comments' | 'date'>
@@ -20,7 +21,8 @@ export async function createSuggestionService(
 }
 
 export async function getSuggestionsService() {
-  return listSuggestions();
+  const authenticated = await isAuthenticated();
+  return listSuggestions({ publicOnly: !authenticated });
 }
 
 export async function voteSuggestionService(id: string) {
