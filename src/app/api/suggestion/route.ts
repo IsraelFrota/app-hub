@@ -1,36 +1,91 @@
 import {
-	NextRequest,
-	NextResponse,
-} from "next/server";
+  NextRequest,
+  NextResponse,
+} from 'next/server';
+import {
+	getSuggestionsService,
+	voteSuggestionService,
+	createSuggestionService,
+} from '@/services/suggestion.service';
+import { suggestionSchema } from '@/lib/schemas/suggestion.schema';
 
-import { connectToDatabaseV2 } from "@/lib/mongoose";
+export async function POST(
+	request: NextRequest
+) {
+  try {
+    const body = await request.json();
 
-import { getSuggestionModel } from "@/model/model";
+    const parsed = suggestionSchema.safeParse(body);
 
-export async function PATCH(request: NextRequest) {
-	await connectToDatabaseV2();
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Invalid data' },
+        { status: 400 }
+      );
+    }
 
-	const { id } = await request.json();
+    await createSuggestionService(parsed.data);
 
-	if (!id) {
-		return NextResponse.json({ error: "Erro ao validar dados" }, { status: 400 });
-	}
-
-	const Suggestion = await getSuggestionModel();
-	const result = await Suggestion.updateOne(
-		{ _id: id },
-		{ $inc: { vote: 1 } }
-	);
-
-	if (result.matchedCount === 0) {
     return NextResponse.json(
-      { error: "Sugestão não encontrada" },
-      { status: 404 }
+      { message: 'Created' },
+      { status: 201 }
+    );
+  } catch {
+    return NextResponse.json(
+      { error: 'Internal error' },
+      { status: 500 }
     );
   }
+}
 
-  return NextResponse.json(
-    { message: "Voto computado com sucesso." },
-    { status: 200 }
-  );
-} 
+export async function GET() {
+  try {
+    const data = await getSuggestionsService();
+    return NextResponse.json(
+      { data },
+      { status: 200 }
+    );
+  } catch {
+    return NextResponse.json(
+      { error: 'Internal error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  request: NextRequest
+) {
+  try {
+    const { id } = await request.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Invalid id' },
+        { status: 400 }
+      );
+    }
+
+    await voteSuggestionService(id);
+
+    return NextResponse.json(
+      { message: 'Vote counted' },
+      { status: 200 }
+    );
+  } catch (error) {
+		if (
+      error instanceof Error &&
+      error.message === "NOT_FOUND"
+    ) {
+      return NextResponse.json(
+        { error: "Suggestion not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Internal error' },
+      { status: 500 }
+    );
+  }
+}

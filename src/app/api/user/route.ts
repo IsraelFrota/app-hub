@@ -1,49 +1,49 @@
 import {
 	NextRequest,
 	NextResponse,
-} from "next/server";
-import {
-	compare,
-} from "bcrypt"
+} from 'next/server';
+import { authenticateUser } from '@/services/auth.service';
 
-import { connectToDatabaseV2 } from "@/lib/mongoose";
+export async function POST(
+	request: NextRequest
+) {
+	try {
+		const { email, password } = await request.json();
 
-import { getUserModel } from "@/model/model";
+		if (!email || !password) {
+			return NextResponse.json(
+				{ error: 'Invalid data' },
+				{ status: 400 }
+			);
+		}
+		
+		const authenticated = await authenticateUser(email, password);
 
-export async function POST(request: NextRequest) {
-	await connectToDatabaseV2();
+		if (!authenticated) {
+			return NextResponse.json(
+				{ success: false },
+				{ status: 400 }
+			);
+		}
 
-	const { email, password } = await request.json();
-
-	if (!email || !password) {
-		return NextResponse.json({ error: "Erro ao validar dados" }, { status: 400 });
-	}
-
-	const User = await getUserModel();
-	const result: {
-		_id: string,
-		email: string,
-		password: string,
-	} | null = await User.findOne({ email: email });
-
-	if (!result) {
-		return NextResponse.json(
-			{ success: false },
-			{ status: 400 }
-		);	
-	}
-
-	const isCorrectPassword = await compare(password, result.password);
-
-	if (isCorrectPassword) {
-		return NextResponse.json(
+		const response = NextResponse.json(
 			{ success: true },
 			{ status: 200 }
 		);
-	}
 
-	return NextResponse.json(
-		{ success: false },
-		{ status: 400 }
-	);
+		response.cookies.set('session', process.env.TOKEN!, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'strict',
+			path: '/',
+			maxAge: 60 * 60 * 8,
+		});
+		
+		return response;
+	} catch {
+		return NextResponse.json(
+      { error: 'Internal error' },
+      { status: 500 }
+    );
+	}
 } 

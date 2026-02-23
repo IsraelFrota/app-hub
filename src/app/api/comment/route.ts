@@ -1,43 +1,46 @@
-import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabaseV2 } from "@/lib/mongoose";
-import { getSuggestionModel } from "@/model/model";
-import { Types } from "mongoose";
+import {
+  NextRequest,
+  NextResponse,
+} from 'next/server';
+import { createCommentService } from '@/services/comment.service';
 
-export async function POST(request: NextRequest) {
-  await connectToDatabaseV2();
+export async function POST(
+  request: NextRequest
+) {
+  try {
+    const { suggestionId, author, text } = await request.json();
 
-  const { suggestionId, author, text } = await request.json();
+    if (!suggestionId || !text) {
+      return NextResponse.json(
+        { error: 'Invalid data' },
+        { status: 400 }
+      );
+    }
 
-  if (!suggestionId || !text) {
+    const comment = await createCommentService(
+        suggestionId,
+        author,
+        text
+      );
+
     return NextResponse.json(
-      { error: "Erro ao validar dados" },
-      { status: 400 }
+      { message: 'Comentário salvo com sucesso.', comment },
+      { status: 200 }
+    );
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === 'NOT_FOUND'
+    ) {
+      return NextResponse.json(
+        { error: 'Suggestion not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Internal error' },
+      { status: 500 }
     );
   }
-
-  const Suggestion = await getSuggestionModel();
-
-  const comment = {
-    _id: new Types.ObjectId(),
-    author: author || "Anônimo",
-    text,
-    date: new Date(),
-  };
-
-  await Suggestion.updateOne(
-    { _id: suggestionId },
-    {
-      $push: {
-        comments: comment,
-      },
-    }
-  );
-
-  return NextResponse.json(
-    {
-      message: "Comentário salvo com sucesso.",
-      comment,
-    },
-    { status: 200 }
-  );
 }
