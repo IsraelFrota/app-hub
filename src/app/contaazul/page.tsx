@@ -1,36 +1,41 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { SiLinux } from "react-icons/si";
+import { SiLinux } from 'react-icons/si';
+
+import {
+  Card,
+  CardTitle,
+  CardHeader,
+  CardContent,
+  CardDescription,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function ContaAzul() {
-	function handleRedirectToContaAzul() {
-		const clientId = process.env.NEXT_PUBLIC_CONTAAZUL_CLIENT_ID!;
-		const redirectUri = process.env.NEXT_PUBLIC_CONTAAZUL_REDIRECT_URI!;
-		const state = process.env.NEXT_PUBLIC_CONTAAZUL_STATE!;
+  async function handleRedirectToContaAzul() {
+    const res = await fetch('/api/contaazul/auth');
+    const { url } = await res.json();
 
-		const authUrl = `https://auth.contaazul.com/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&scope=openid+profile+aws.cognito.signin.user.admin`
-		
-		window.location.href = authUrl;
-	}
+    window.location.href = url;
+  }
 
-	return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md shadow-lg rounded-2xl">
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-gray-50'>
+      <Card className='w-full max-w-md shadow-lg rounded-2xl'>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl font-bold">
+          <CardTitle className='flex items-center gap-2 text-xl font-bold'>
             <SiLinux size={24} />
             Conectar à Conta Azul
           </CardTitle>
           <CardDescription>
-            Conecte sua conta para sincronizar dados financeiros com segurança.
+            Conecte sua conta para sincronizar dados financeiros.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex justify-center">
+
+        <CardContent>
           <Button
             onClick={handleRedirectToContaAzul}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-6 text-lg"
+            className='w-full bg-blue-600 hover:bg-blue-700 text-white'
           >
             Conectar com Conta Azul
           </Button>
