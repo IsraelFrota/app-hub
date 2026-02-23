@@ -9,12 +9,15 @@ import {
 
 import { Separator } from '@/components/ui/separator';
 
-import { apps } from "@/lib/link";
-
 import { AppCard } from './_components/card/AppCard';
 import { AppDialog } from './_components/dialog/AppDialog';
 import { LoginFormContainer } from './_components/auth/LoginFormContainer';
 import { SuggestionFormContainer } from './_components/suggestion/SuggestionFormContainer';
+
+import {
+  apps,
+  AppCategory, 
+} from "@/lib/link";
 
 export default function Home() {
   const [search, setSearch] = useState('');
@@ -22,9 +25,31 @@ export default function Home() {
   const [isSuggestionDialogOpen, setIsSuggestionDialogOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
-  const filteredApps = apps.filter(app =>
-    app.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const normalizedSearch = search.toLowerCase();
+
+  const categoryOrder: Record<AppCategory, number> = {
+    utilidades: 1,
+    auditoria: 2,
+    infra: 3,
+    rh: 4,
+    dp: 5,
+  };
+
+  const filteredApps = apps
+    .filter(app =>
+      app.title.toLowerCase().includes(normalizedSearch)
+    )
+    .sort((a, b) => {
+      const categoryDiff =
+      categoryOrder[a.category] - categoryOrder[b.category];
+
+      if (categoryDiff !== 0) return categoryDiff;
+      
+      if (a.category !== b.category) {
+        return a.category.localeCompare(b.category);
+      }
+      return a.title.localeCompare(b.title, 'pt-BR', { sensitivity: 'base' });
+    });
 
   return (
     <>
