@@ -1,4 +1,4 @@
-import mongoose, { Connection } from "mongoose";
+import mongoose, { Connection } from 'mongoose';
 
 interface MongooseCache {
   conn: Connection | null;
@@ -6,60 +6,56 @@ interface MongooseCache {
 }
 
 declare global {
-  var mongooseMain: MongooseCache | undefined;
-  var mongooseV2: MongooseCache | undefined;
+  var mongooseConnections:
+    | Record<string, MongooseCache>
+    | undefined;
 }
 
-const cachedMain: MongooseCache = global.mongooseMain || {
-  conn: null,
-  promise: null,
-};
+export type CacheKey = 'CONTA_AZUL' | 'SUGGESTION';
 
-const cachedV2: MongooseCache = global.mongooseV2 || {
-  conn: null,
-  promise: null,
-};
-
-export async function connectToDatabase() {
-  const MONGODB_URI = process.env.MONGODB_URI;
-  if (!MONGODB_URI) {
-    throw new Error("MONGODB_URI não definida nas variáveis de ambiente");
-  }
-
-  if (cachedMain.conn) return cachedMain.conn;
-
-  if (!cachedMain.promise) {
-    cachedMain.promise = mongoose
-      .createConnection(MONGODB_URI, {
-        bufferCommands: false,
-      })
-      .asPromise();
-  }
-
-  cachedMain.conn = await cachedMain.promise;
-  global.mongooseMain = cachedMain;
-
-  return cachedMain.conn;
+if (!global.mongooseConnections) {
+  global.mongooseConnections = {};
 }
 
-export async function connectToDatabaseV2() {
-  const MONGODB_URI_V2 = process.env.MONGODB_URI_V2;
-  if (!MONGODB_URI_V2) {
-    throw new Error("MONGODB_URI_V2 não definida nas variáveis de ambiente");
+const globalCache = global.mongooseConnections;
+
+async function createConnection(
+  cacheKey: CacheKey,
+  uri: string | undefined
+): Promise<Connection> {
+  if (!uri) {
+    throw new Error(
+      `${cacheKey} not defined in the environment variables`
+    );
   }
-
-  if (cachedV2.conn) return cachedV2.conn;
-
-  if (!cachedV2.promise) {
-    cachedV2.promise = mongoose
-      .createConnection(MONGODB_URI_V2, {
+  if (!globalCache[cacheKey]) {
+    globalCache[cacheKey] = {
+      conn: null,
+      promise: null,
+    };
+  }
+  const cache = globalCache[cacheKey];
+  if (cache.conn) {
+    return cache.conn;
+  }
+  if (!cache.promise) {
+    cache.promise = mongoose
+      .createConnection(uri, {
         bufferCommands: false,
       })
-      .asPromise();
+      .asPromise()
+      .catch((err) => {
+        cache.promise = null;
+        throw err;
+      });
   }
+  cache.conn = await cache.promise;
+  return cache.conn;
+}
 
-  cachedV2.conn = await cachedV2.promise;
-  global.mongooseV2 = cachedV2;
-
-  return cachedV2.conn;
+export function connectToDatabase(
+  key: CacheKey,
+  uri: string | undefined
+) {
+  return createConnection(key, uri);
 }
