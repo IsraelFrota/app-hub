@@ -119,4 +119,13 @@ export const apps: App[] = [
 		external: false,
 		category: 'utilidades',
 	},
+	{
+		id: 'empresas',
+		title: 'Consulta de Empresas',
+		icon: '🏢',
+		url: `${DEV_SERVER}:3014`,
+		description: 'Acesse informações públicas de empresas',
+		external: false,
+		category: 'utilidades',
+	}
 ];
