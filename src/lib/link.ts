@@ -127,5 +127,23 @@ export const apps: App[] = [
 		description: 'Acesse informações públicas de empresas',
 		external: false,
 		category: 'utilidades',
+	},
+	{
+		id: 'dash-legalizacao',
+		title: 'Dashboard Legalização',
+		icon: '⚖️',
+		url: 'https://legalizacao-ifcontabil.web.app/',
+		description: 'Painel para acompanhamento do processo de legalização de empresas.',
+		external: true,
+		category: 'utilidades',
+	},
+	{
+		id: 'customer',
+		title: 'Controle de Clientes',
+		icon: '👥',
+		url: 'https://client-control-ifcontabil.web.app/',
+		description: 'Sistema para gerenciamento e cadastro de clientes.',
+		external: true,
+		category: 'utilidades',
 	}
 ];
