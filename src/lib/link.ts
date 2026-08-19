@@ -145,5 +145,14 @@ export const apps: App[] = [
 		description: 'Sistema para gerenciamento e cadastro de clientes.',
 		external: true,
 		category: 'utilidades',
+	},
+	{
+		id: 'atas',
+		title: 'Atas',
+		icon: '🖿',
+		url: 'https://atas-ifcontabil.web.app/',
+		description: 'Registro de atas',
+		external: true,
+		category: 'utilidades',
 	}
 ];

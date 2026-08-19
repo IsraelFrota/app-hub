@@ -76,8 +76,8 @@ export function SuggestionFormView({
 											</SelectTrigger>
 											<SelectContent className='min-w-full'>
 												<SelectGroup>
-													<SelectItem value='suggestion'>Sugestão</SelectItem>
-													<SelectItem value='feedback'>Feedback</SelectItem>
+													<SelectItem value='suggestion'>Sugestão (público)</SelectItem>
+													<SelectItem value='feedback'>Feedback (privado)</SelectItem>
 												</SelectGroup>
 											</SelectContent>
 										</Select>
