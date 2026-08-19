@@ -149,7 +149,7 @@ export const apps: App[] = [
 	{
 		id: 'atas',
 		title: 'Atas',
-		icon: '🖿',
+		icon: '🗁',
 		url: 'https://atas-ifcontabil.web.app/',
 		description: 'Registro de atas',
 		external: true,
