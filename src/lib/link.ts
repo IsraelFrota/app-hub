@@ -148,10 +148,10 @@ export const apps: App[] = [
 	},
 	{
 		id: 'atas',
-		title: 'Atas',
-		icon: '🗁',
+		title: 'Registro de Atas',
+		icon: '📋',
 		url: 'https://atas-ifcontabil.web.app/',
-		description: 'Registro de atas',
+		description: 'Registre e organize atas de reuniões.',
 		external: true,
 		category: 'utilidades',
 	}
