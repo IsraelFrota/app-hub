@@ -154,5 +154,14 @@ export const apps: App[] = [
 		description: 'Registre e organize atas de reuniões.',
 		external: true,
 		category: 'utilidades',
+	},
+	{
+		id: 'visitas',
+		title: 'Agenda de visitas',
+		icon: '📆',
+		url: 'https://visitas-ifcontabil.web.app/',
+		description: 'Cronograma de visitas',
+		external: true,
+		category: 'utilidades',
 	}
 ];
