@@ -44,13 +44,15 @@ export function SuggestionFormContainer() {
       });
 
       if (!response.ok) {
-        toast.error('Error ao registrar');
+        toast.error('Erro ao registrar. Tente novamente.');
         return;
       }
 
-      toast.success('Registrado com sucesso!');
+      suggestionForm.reset();
+      toast.success('Enviado com sucesso! Obrigado pela sua contribuição.');
     } catch (error) {
       console.error(error);
+      toast.error('Erro de conexão. Tente novamente.');
     } finally {
       setLoading(false);
     }

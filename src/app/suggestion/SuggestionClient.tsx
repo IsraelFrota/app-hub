@@ -1,39 +1,24 @@
 'use client';
 
-import {
-  useState,
-  useEffect,
-} from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { toast } from 'sonner';
+import { MessageCircle, Inbox } from 'lucide-react';
 
-import {
-  ThumbsUp,
-  MessageSquare,
-} from 'lucide-react';
-
-import {
-  Table,
-  TableRow,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableCaption,
-} from '@/components/ui/table';
 import {
   Card,
   CardTitle,
   CardHeader,
   CardContent,
 } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogTitle,
-  DialogHeader,
-  DialogContent,
-} from '@/components/ui/dialog';
-import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+
+import { SuggestionCard } from '@/app/_components/suggestion/SuggestionCard';
+import {
+  SuggestionFilters,
+  FilterType,
+  SortType,
+} from '@/app/_components/suggestion/SuggestionFilters';
+import { CommentDialog } from '@/app/_components/suggestion/CommentDialog';
 
 type Comment = {
   _id: string;
@@ -56,29 +41,18 @@ type SuggestionClientProps = {
   initialSuggestions: SuggestionData[];
 };
 
-export function SuggestionClient({
-  initialSuggestions,
-}: SuggestionClientProps) {
-
-  const [suggestions, setSuggestions] =
-    useState<SuggestionData[]>(initialSuggestions);
-
-  const [selectedSuggestion, setSelectedSuggestion] =
-    useState<SuggestionData | null>(null);
-
-  const [newComment, setNewComment] = useState('');
-  const [author, setAuthor] = useState('');
-
-  const [votedSuggestions, setVotedSuggestions] =
-    useState<string[]>([]);
-
+export function SuggestionClient({ initialSuggestions }: SuggestionClientProps) {
+  const [suggestions, setSuggestions] = useState<SuggestionData[]>(initialSuggestions);
+  const [selectedSuggestion, setSelectedSuggestion] = useState<SuggestionData | null>(null);
+  const [votedSuggestions, setVotedSuggestions] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
-    const voted = JSON.parse(
-      localStorage.getItem('votedSuggestions') || '[]'
-    );
+  const [search, setSearch] = useState('');
+  const [filterType, setFilterType] = useState<FilterType>('all');
+  const [sortType, setSortType] = useState<SortType>('recent');
 
+  useEffect(() => {
+    const voted = JSON.parse(localStorage.getItem('votedSuggestions') || '[]');
     setVotedSuggestions(voted);
     setHydrated(true);
   }, []);
@@ -88,14 +62,9 @@ export function SuggestionClient({
   }
 
   function markAsVoted(id: string) {
-    setVotedSuggestions(prev => {
+    setVotedSuggestions((prev) => {
       const updated = [...prev, id];
-
-      localStorage.setItem(
-        'votedSuggestions',
-        JSON.stringify(updated)
-      );
-
+      localStorage.setItem('votedSuggestions', JSON.stringify(updated));
       return updated;
     });
   }
@@ -115,34 +84,31 @@ export function SuggestionClient({
         return;
       }
 
-      setSuggestions(prev =>
-        prev.map(item =>
-          item._id === id
-            ? { ...item, vote: item.vote + 1 }
-            : item
+      setSuggestions((prev) =>
+        prev.map((item) =>
+          item._id === id ? { ...item, vote: item.vote + 1 } : item
         )
       );
 
-      markAsVoted(id);
+      setSelectedSuggestion((prev) =>
+        prev && prev._id === id ? { ...prev, vote: prev.vote + 1 } : prev
+      );
 
+      markAsVoted(id);
       toast.success('Voto computado com sucesso!');
     } catch {
       toast.error('Erro ao registrar voto');
     }
   }
 
-  async function addComment(id: string) {
-    if (!newComment.trim()) return;
+  async function addComment(id: string, text: string, author: string) {
+    if (!text.trim()) return;
 
     try {
       const response = await fetch('/api/comment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          suggestionId: id,
-          text: newComment,
-          author,
-        }),
+        body: JSON.stringify({ suggestionId: id, text, author }),
       });
 
       if (!response.ok) {
@@ -152,27 +118,19 @@ export function SuggestionClient({
 
       const { comment } = await response.json();
 
-      setSuggestions(prev =>
-        prev.map(item =>
+      setSuggestions((prev) =>
+        prev.map((item) =>
           item._id === id
-            ? {
-                ...item,
-                comments: [...item.comments, comment],
-              }
+            ? { ...item, comments: [...item.comments, comment] }
             : item
         )
       );
 
-      setSelectedSuggestion(prev =>
-        prev
-          ? {
-              ...prev,
-              comments: [...prev.comments, comment],
-            }
+      setSelectedSuggestion((prev) =>
+        prev && prev._id === id
+          ? { ...prev, comments: [...prev.comments, comment] }
           : prev
       );
-
-      setNewComment('');
 
       toast.success('Comentário adicionado!');
     } catch {
@@ -180,186 +138,110 @@ export function SuggestionClient({
     }
   }
 
+  const filteredAndSorted = useMemo(() => {
+    let result = [...suggestions];
+
+    if (filterType !== 'all') {
+      result = result.filter((s) => s.type === filterType);
+    }
+
+    if (search.trim()) {
+      const normalizedSearch = search.toLowerCase();
+      result = result.filter(
+        (s) =>
+          s.text.toLowerCase().includes(normalizedSearch) ||
+          (s.name && s.name.toLowerCase().includes(normalizedSearch))
+      );
+    }
+
+    switch (sortType) {
+      case 'votes':
+        result.sort((a, b) => b.vote - a.vote);
+        break;
+      case 'comments':
+        result.sort((a, b) => b.comments.length - a.comments.length);
+        break;
+      case 'recent':
+      default:
+        result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+
+    return result;
+  }, [suggestions, filterType, search, sortType]);
+
+  const stats = useMemo(() => ({
+    total: suggestions.length,
+    suggestions: suggestions.filter((s) => s.type === 'suggestion').length,
+    feedbacks: suggestions.filter((s) => s.type === 'feedback').length,
+  }), [suggestions]);
+
   return (
-    <main className='min-h-screen flex justify-center items-start bg-muted/40 py-10 px-4'>
-      <Card className='w-full max-w-5xl shadow-lg'>
+    <main className="min-h-screen flex justify-center items-start bg-muted/40 py-6 sm:py-10 px-4">
+      <Card className="w-full max-w-7xl shadow-lg">
         <CardHeader>
-          <CardTitle>
-            Feedbacks e Sugestões
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <MessageCircle className="w-5 h-5" />
+              Feedbacks e Sugestões
+            </CardTitle>
+
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs">
+                {stats.suggestions} sugestões
+              </Badge>
+              <Badge variant="secondary" className="text-xs">
+                {stats.feedbacks} feedbacks
+              </Badge>
+            </div>
+          </div>
         </CardHeader>
 
-        <CardContent>
-          <Table>
-            <TableCaption>
-              Lista de feedbacks e sugestões enviados pelos colaboradores
-            </TableCaption>
+        <CardContent className="space-y-4">
+          <SuggestionFilters
+            search={search}
+            onSearchChange={setSearch}
+            filterType={filterType}
+            onFilterTypeChange={setFilterType}
+            sortType={sortType}
+            onSortTypeChange={setSortType}
+            totalCount={stats.total}
+            filteredCount={filteredAndSorted.length}
+          />
 
-            <TableHeader>
-              <TableRow>
-                <TableHead className='w-[120px]'>Data</TableHead>
-                <TableHead className='w-[180px]'>Nome</TableHead>
-                <TableHead>Conteúdo</TableHead>
-                <TableHead className='w-[120px] text-center'>Tipo</TableHead>
-                <TableHead className='w-[160px] text-center'>
-                  Votação / Comentários
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {suggestions.map(suggestion => (
-                <TableRow 
+          {filteredAndSorted.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Inbox className="w-12 h-12 mb-3 opacity-50" />
+              <p className="text-sm font-medium">Nenhuma sugestão encontrada</p>
+              <p className="text-xs">
+                {search || filterType !== 'all'
+                  ? 'Tente ajustar os filtros de busca'
+                  : 'Seja o primeiro a enviar uma sugestão!'}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredAndSorted.map((suggestion) => (
+                <SuggestionCard
                   key={suggestion._id}
-                  className='hover:bg-muted/50 transition-colors'
-                >
-                  <TableCell
-                    className='align-middle text-sm text-muted-foreground'
-                  >
-                    {new Date(
-                      suggestion.date
-                    ).toLocaleDateString('pt-BR')}
-                  </TableCell>
-
-                  <TableCell>
-                    {suggestion.name || (
-                      <span className='italic text-muted-foreground'>
-                        Anônimo
-                      </span>
-                    )}
-                  </TableCell>
-
-                  <TableCell 
-                    className='break-words whitespace-normal align-middle'
-                  >
-                    {suggestion.text}
-                  </TableCell>
-
-                  <TableCell className='text-center'>
-                    <Badge
-                      variant={
-                        suggestion.type === 'suggestion'
-                          ? 'default'
-                          : 'secondary'
-                      }
-                    >
-                      {suggestion.type === 'suggestion'
-                        ? 'Sugestão'
-                        : 'Feedback'}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell
-                    className='text-right align-middle'
-                  >
-                    <div className='flex items-center justify-end gap-2'>
-                      <Button
-                        size='sm'
-                        disabled={
-                          !hydrated ||
-                          hasVoted(suggestion._id)
-                        }
-                        onClick={() =>
-                          vote(suggestion._id)
-                        }
-                        className='flex items-center gap-1'
-                      >
-                        <ThumbsUp size={16} />
-                        {suggestion.vote}
-                      </Button>
-
-                      <Button
-                        size='sm'
-                        variant='outline'
-                        onClick={() =>
-                          setSelectedSuggestion(
-                            suggestion
-                          )
-                        }
-                        className='flex items-center gap-1'
-                      >
-                        <MessageSquare size={16} />
-                        {suggestion.comments.length}
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                  suggestion={suggestion}
+                  hasVoted={hydrated && hasVoted(suggestion._id)}
+                  onVote={vote}
+                  onOpenComments={setSelectedSuggestion}
+                />
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      <Dialog
+      <CommentDialog
+        suggestion={selectedSuggestion}
         open={!!selectedSuggestion}
-        onOpenChange={() => {
-          setAuthor('');
-          setSelectedSuggestion(null);
+        onOpenChange={(open) => {
+          if (!open) setSelectedSuggestion(null);
         }}
-      >
-        <DialogContent className='max-w-2xl'>
-          <DialogHeader>
-            <DialogTitle>
-              Comentários da sugestão
-            </DialogTitle>
-          </DialogHeader>
-
-          {selectedSuggestion && (
-            <div className='space-y-4'>
-              <div className='p-3 bg-muted rounded-md text-sm'>
-                {selectedSuggestion.text}
-              </div>
-
-              {selectedSuggestion.comments.map(comment => (
-                <div
-                  key={comment._id}
-                  className='border p-3 rounded-md text-sm'
-                >
-                  <div className='flex justify-between text-xs text-muted-foreground'>
-                    <span>
-                      {comment.author || 'Anônimo'}
-                    </span>
-                    <span>
-                      {new Date(comment.date).toLocaleDateString('pt-BR')}
-                    </span>
-                  </div>
-
-                  <p className='mt-1'>{comment.text}</p>
-                </div>
-              ))}
-
-              <div className='flex flex-col gap-2 pt-2 border-t'>
-                <div className='flex flex-col gap-2'>
-                  <input
-                    value={author}
-                    onChange={e =>
-                      setAuthor(e.target.value)
-                    }
-                    placeholder='Seu nome (opcional)'
-                    className='flex-1 border rounded-md px-2 py-1 placeholder:text-sm'
-                  />
-
-                  <input
-                    value={newComment}
-                    onChange={e =>
-                      setNewComment(e.target.value)
-                    }
-                    placeholder='Comentário...'
-                    className='flex-1 border rounded-md px-2 py-1 placeholder:text-sm'
-                  />
-                </div>
-              </div>
-
-              <Button
-                size='sm'
-                onClick={() => addComment(selectedSuggestion._id)}
-              >
-                Comentar
-              </Button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+        onAddComment={addComment}
+      />
     </main>
   );
 }
