@@ -78,7 +78,7 @@ export const apps: App[] = [
 		id: 'if-controle-ponto',
 		title: 'IF Controle de Ponto',
 		icon: '🕰️',
-		url: `${DEV_SERVER}:3008`,
+		url: `${DEV_SERVER}:3008/login`,
 		description: 'Sistema digital de controle de ponto para estagiários.',
 		external: true,
 		category: 'rh',
