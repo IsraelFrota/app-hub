@@ -15,6 +15,7 @@ export type App = {
   description: string;
   external: boolean;
 	category: AppCategory;
+	group: number;
 };
 
 const DEV_SERVER = process.env.NEXT_PUBLIC_DEV_SERVER ?? '';
@@ -37,6 +38,7 @@ export const apps: App[] = [
 		description: 'Sistema para realização de auditorias da metodologia 5S.',
 		external: true,
 		category: 'auditoria',
+		group: 2,
 	},
 	{
 		id: 'criterios-auditoria',
@@ -46,6 +48,7 @@ export const apps: App[] = [
 		description: 'Planilha com os critérios de avaliação para a auditoria 5S.',
 		external: true,
 		category: 'auditoria',
+		group: 2,
 	},
 	{
 		id: 'catalago-livros',
@@ -55,6 +58,7 @@ export const apps: App[] = [
 		description: 'Planilha do Google com o catálogo de livros disponíveis.',
 		external: true,
 		category: 'utilidades',
+		group: 2,
 	},
 	{
 		id: 'dashboard-5s',
@@ -64,6 +68,7 @@ export const apps: App[] = [
 		description: 'Painel para visualização dos resultados das auditorias 5S.',
 		external: true,
 		category: 'auditoria',
+		group: 2,
 	},
 	{
 		id: 'if-music',
@@ -73,6 +78,7 @@ export const apps: App[] = [
 		description: 'Player de música local para streaming interno.',
 		external: true,
 		category: 'utilidades',
+		group: 2,
 	},
 	{
 		id: 'if-controle-ponto',
@@ -82,6 +88,7 @@ export const apps: App[] = [
 		description: 'Sistema digital de controle de ponto para estagiários.',
 		external: true,
 		category: 'rh',
+		group: 2,
 	},
 	{
 		id: 'servidor-arquivos',
@@ -91,6 +98,7 @@ export const apps: App[] = [
 		description: 'Servidor local para gerenciamento e acesso a arquivos compartilhados.',
 		external: true,
 		category: 'infra',
+		group: 2,
 	},
 	{
 		id: 'office-track',
@@ -100,6 +108,7 @@ export const apps: App[] = [
 		description: 'Sistema para colaboração e organização das atividades da empresa no setor de recursos humanos.',
 		external: true,
 		category: 'dp',
+		group: 2,
 	},
 	{
 		id: 'horario-lanche',
@@ -109,6 +118,7 @@ export const apps: App[] = [
 		description: 'Planilha do Google contendo o cronograma de lanches.',
 		external: true,
 		category: 'utilidades',
+		group: 2,
 	},
 	{
 		id: 'feedbacks',
@@ -118,6 +128,7 @@ export const apps: App[] = [
 		description: 'Página com os feedbacks e sugestões dos colaboradores.',
 		external: false,
 		category: 'utilidades',
+		group: 2,
 	},
 	{
 		id: 'empresas',
@@ -127,6 +138,7 @@ export const apps: App[] = [
 		description: 'Acesse informações públicas de empresas',
 		external: false,
 		category: 'utilidades',
+		group: 2,
 	},
 	{
 		id: 'dash-legalizacao',
@@ -136,6 +148,7 @@ export const apps: App[] = [
 		description: 'Painel para acompanhamento do processo de legalização de empresas.',
 		external: true,
 		category: 'utilidades',
+		group: 1,
 	},
 	{
 		id: 'customer',
@@ -145,6 +158,7 @@ export const apps: App[] = [
 		description: 'Sistema para gerenciamento e cadastro de clientes.',
 		external: true,
 		category: 'utilidades',
+		group: 1,
 	},
 	{
 		id: 'atas',
@@ -154,14 +168,6 @@ export const apps: App[] = [
 		description: 'Registre e organize atas de reuniões.',
 		external: true,
 		category: 'utilidades',
+		group: 1,
 	},
-	{
-		id: 'visitas',
-		title: 'Agenda de visitas',
-		icon: '📆',
-		url: 'https://visitas-ifcontabil.web.app/',
-		description: 'Cronograma de visitas',
-		external: true,
-		category: 'utilidades',
-	}
 ];

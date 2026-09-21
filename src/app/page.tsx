@@ -13,9 +13,11 @@ import { AppCard } from './_components/card/AppCard';
 import { AppDialog } from './_components/dialog/AppDialog';
 import { LoginFormContainer } from './_components/auth/LoginFormContainer';
 import { SuggestionFormContainer } from './_components/suggestion/SuggestionFormContainer';
+import { groupMeta } from '@/lib/group-meta';
 
 import {
   apps,
+  App,
   AppCategory, 
 } from "@/lib/link";
 
@@ -40,6 +42,10 @@ export default function Home() {
       app.title.toLowerCase().includes(normalizedSearch)
     )
     .sort((a, b) => {
+      const groupDiff = a.group - b.group;
+
+      if (groupDiff !== 0) return groupDiff;
+
       const categoryDiff =
       categoryOrder[a.category] - categoryOrder[b.category];
 
@@ -50,6 +56,21 @@ export default function Home() {
       }
       return a.title.localeCompare(b.title, 'pt-BR', { sensitivity: 'base' });
     });
+
+  const groupedApps = filteredApps.reduce<Record<number, App[]>>(
+    (acc, app) => {
+      (acc[app.group] ??= []).push(app);
+      return acc;
+    },
+    {}
+  );
+
+  const sortedGroups = Object.entries(groupedApps)
+    .map(([group, groupApps]) => ({
+      group: Number(group),
+      groupApps,
+    }))
+    .sort((a, b) => a.group - b.group);
 
   return (
     <>
@@ -96,17 +117,27 @@ export default function Home() {
             className="w-full p-3 rounded-md bg-white/10 border border-white/20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-white/30 text-sm sm:text-base"
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-            {filteredApps.length > 0 ? (
-              filteredApps.map((app) => (
-                <AppCard item={app} key={app.id} />
-              ))
-            ) : (
-              <p className="text-sm text-gray-300 col-span-full text-center">
-                No applications found.
-              </p>
-            )}
-          </div>
+          {filteredApps.length > 0 ? (
+            <div className="mt-6 space-y-6">
+              {sortedGroups.map(({ group, groupApps }) => (
+                <section key={group}>
+                  <h2 className="text-white text-xs sm:text-sm font-semibold uppercase tracking-wider mb-3 px-1">
+                    {groupMeta[group]?.label ?? `Grupo ${group}`}
+                  </h2>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {groupApps.map((app) => (
+                      <AppCard item={app} key={app.id} />
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-300 col-span-full text-center mt-6">
+              No applications found.
+            </p>
+          )}
         </div>
       </div>
 
