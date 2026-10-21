@@ -178,6 +178,6 @@ export const apps: App[] = [
 		description: '',
 		external: true,
 		category: 'utilidades',
-		group: 1
+		group: 2
 	}
 ];
