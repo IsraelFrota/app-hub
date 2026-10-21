@@ -170,4 +170,14 @@ export const apps: App[] = [
 		category: 'utilidades',
 		group: 1,
 	},
+	{
+		id: 'rotatividade',
+		title: 'Rotatividade',
+		icon: '🗓️',
+		url: 'https://claude.ai/artifact/JrdK7WE31KjcAUm4f2JjnX',
+		description: '',
+		external: true,
+		category: 'utilidades',
+		group: 1
+	}
 ];
