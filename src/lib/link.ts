@@ -174,9 +174,9 @@ export const apps: App[] = [
 		id: 'rotatividade',
 		title: 'Rotatividade',
 		icon: '🗓️',
-		url: 'https://claude.ai/artifact/JrdK7WE31KjcAUm4f2JjnX',
+		url: 'http://192.168.0.3:18090',
 		description: '',
-		external: true,
+		external: false,
 		category: 'utilidades',
 		group: 2
 	}
